@@ -1,0 +1,12 @@
+# Configuration for HotpotQA (subset) experiment on a small model.
+
+backbone_config: "configs/backbone_llama1b.yaml"
+
+data:
+  five_tuple_path: "data/5tuple/hotpot.jsonl"
+  qa_train_path:   "data/qa/hotpot_train.jsonl"
+  qa_dev_path:     "data/qa/hotpot_dev.jsonl"
+
+default_question_time:
+  start: null
+  end: null

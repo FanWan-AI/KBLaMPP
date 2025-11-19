@@ -1,0 +1,16 @@
+# Example configuration for training on a synthetic knowledge world.
+# This YAML references the backbone and embedding models defined in
+# another config file.  See backbone_llama1b.yaml for details.
+
+backbone_config: "configs/backbone_llama1b.yaml"
+
+# Data paths (fill with your generated files)
+data:
+  five_tuple_path: "data/5tuple/synth_world.jsonl"
+  qa_train_path:   "data/qa/synth_world_train.jsonl"
+  qa_dev_path:     "data/qa/synth_world_dev.jsonl"
+
+# Time window for questions (used if no explicit question_time in QA)
+default_question_time:
+  start: null
+  end: null

@@ -1,0 +1,13 @@
+# Configuration for TimeQA (subset) experiment on a small model.
+
+backbone_config: "configs/backbone_llama1b.yaml"
+
+data:
+  five_tuple_path: "data/5tuple/timeqa.jsonl"
+  qa_train_path:   "data/qa/timeqa_train.jsonl"
+  qa_dev_path:     "data/qa/timeqa_dev.jsonl"
+
+# For TimeQA tasks the question_time field in QA may be specified.
+default_question_time:
+  start: null
+  end: null
