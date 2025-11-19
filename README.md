@@ -53,15 +53,24 @@ the code highlight where your code should go.
       `hotpot.yaml` and `timeqa.yaml` show how to hook in your data
       sources.
 
-2.  Populate `data/raw/` with your source data or run the
-    generation scripts in `offline/` to create synthetic five‑tuples
-    and question/answer pairs.
+2.  Populate `data/raw/` with your source data **or** run the
+  automated pipeline:
 
-3.  Run `offline/encode_kv.py` to encode your five‑tuples
-    into key and value matrices.  Adjust the `d_k`/`d_v`/`d_ctx`
-    dimensions in the config to suit your hardware.
+  ```bash
+  python offline/run_pipeline.py --config configs/synth_world.yaml
+  ```
 
-4.  Build an ANN index from the keys using `offline/build_index.py`.
+  The pipeline generates/refreshes five‑tuples, QA files,
+  encoded key/value arrays and the FAISS index under the `store/`
+  directory referenced by the config.  Use `--steps` to run a
+  subset (e.g. only `encode` + `index`) and `--force` to
+  overwrite existing artefacts.
+
+3.  (Optional manual flow.) If you prefer step‑by‑step control, run
+  `offline/encode_kv.py` to encode your five‑tuples into key and
+  value matrices, then follow up with `offline/build_index.py`
+  to create the ANN index.  Adjust the `d_k`/`d_v`/`d_ctx`
+  dimensions in the config to suit your hardware.
 
 5.  Train the KBLaM++ model using `train/train_stageA.py`.  Make
     sure your YAML config specifies the correct backbone, embedding

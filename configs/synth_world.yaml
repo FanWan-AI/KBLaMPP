@@ -4,11 +4,38 @@
 
 backbone_config: "configs/backbone_llama1b.yaml"
 
-# Data paths (fill with your generated files)
+# Data paths (filled/created by the offline pipeline)
 data:
   five_tuple_path: "data/5tuple/synth_world.jsonl"
   qa_train_path:   "data/qa/synth_world_train.jsonl"
   qa_dev_path:     "data/qa/synth_world_dev.jsonl"
+
+# Where encoded keys/values, metadata and FAISS index will be stored
+store:
+  root: "store/synth_world"
+  index_subdir: "index_hnsw"
+
+# Offline pipeline defaults
+pipeline:
+  generate_world: true
+  world:
+    num_entities: 15
+    num_facts: 80
+    seed: 42
+  qa:
+    train_questions: 200
+    dev_questions: 50
+    seed: 1337
+  encoder:
+    d_k: 384
+    d_v: 384
+    d_ctx: 384
+    d_tau: 32
+    model_name: "BAAI/bge-small-en-v1.5"
+    batch_size: 64
+    max_length: 128
+  index:
+    method: "hnsw"
 
 # Time window for questions (used if no explicit question_time in QA)
 default_question_time:

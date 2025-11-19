@@ -3,14 +3,21 @@
 This script composes the backbone model, knowledge modules and
 tokenized QA data for stage A, where the backbone is frozen and
 only the KB selector/fusion components are optimised.
+
+Dataset paths, store directories and offline artefacts are all
+read from the dataset config (e.g. ``configs/synth_world.yaml``),
+so running ``offline/run_pipeline.py`` beforehand automatically
+prepares everything required for training.
 """
 
 from __future__ import annotations
 
 import argparse
-import yaml
+from pathlib import Path
+
 import torch
 import torch.nn.functional as F
+import yaml
 from torch.optim import AdamW
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -21,12 +28,13 @@ from kblampp.fusion import KBFusionLayer
 from kblampp.injection_wrapper import KBInjectedModel
 from .dataloader import get_dataloader
 
+ROOT = Path(__file__).resolve().parents[1]
+
 
 def main():
     parser = argparse.ArgumentParser(description="Train KBLaM++ Stage A")
     parser.add_argument("--config", type=str, required=True, help="Path to YAML config file")
-    parser.add_argument("--dataset", type=str, required=True, help="QA dataset for training")
-    parser.add_argument("--store", type=str, default="store", help="Path to store directory")
+    parser.add_argument("--device", type=str, default=None, help="Torch device override (default: auto)")
     args = parser.parse_args()
 
     # Load config
@@ -35,9 +43,33 @@ def main():
     # Load backbone config
     with open(cfg["backbone_config"]) as f:
         bcfg = yaml.safe_load(f)
+    data_cfg = cfg.get("data", {})
+    store_cfg = cfg.get("store", {})
+    dataset_path = ROOT / data_cfg.get("qa_train_path", "")
+    if not dataset_path.exists():
+        raise FileNotFoundError(f"QA dataset not found: {dataset_path}")
+
+    store_root = ROOT / store_cfg.get("root", "store")
+    index_dir = store_root / store_cfg.get("index_subdir", "index_hnsw")
+    required_files = [
+        store_root / "K.npy",
+        store_root / "V.npy",
+        store_root / "meta" / "ctx_vec.npy",
+        store_root / "meta" / "tau_min.npy",
+        store_root / "meta" / "tau_max.npy",
+    ]
+    for path in required_files:
+        if not path.exists():
+            raise FileNotFoundError(f"Missing encoded artefact: {path}")
+    if not index_dir.exists():
+        raise FileNotFoundError(f"FAISS index directory missing: {index_dir}")
+
     # Load backbone model and tokenizer
     model_name = bcfg["backbone"]
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if args.device is not None:
+        device = torch.device(args.device)
+    else:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     backbone = AutoModelForCausalLM.from_pretrained(model_name).to(device)
     backbone.requires_grad_(False)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -46,8 +78,8 @@ def main():
         tokenizer.pad_token_id = tokenizer.eos_token_id
 
     # Knowledge components
-    index = KnowledgeIndex.load(f"{args.store}/index_hnsw")
-    kb_store = KBValueStore(args.store, device)
+    index = KnowledgeIndex.load(str(index_dir))
+    kb_store = KBValueStore(str(store_root), device)
     d_k, d_v, d_ctx = bcfg["d_k"], bcfg["d_v"], bcfg["d_ctx"]
     selector = KBSelector(d_k, d_ctx, gamma=bcfg["gamma"], eta=bcfg["eta"], temperature=bcfg["temperature"])
     fusion = KBFusionLayer(bcfg["d_model"], n_heads=8)
@@ -66,34 +98,47 @@ def main():
         k_top=bcfg["K_top"],
     ).to(device)
 
-    optimiser = AdamW(inj_model.parameters(), lr=bcfg["train"]["lr"], weight_decay=bcfg["train"]["weight_decay"])
+    train_cfg = bcfg.get("train", {})
+    optimiser = AdamW(
+        inj_model.parameters(),
+        lr=train_cfg.get("lr", 5e-4),
+        weight_decay=train_cfg.get("weight_decay", 0.01),
+    )
     dataloader = get_dataloader(
-        args.dataset,
+        str(dataset_path),
         tokenizer,
-        bcfg["train"]["max_seq_len"],
-        bcfg["train"]["batch_size"],
+        train_cfg.get("max_seq_len", 512),
+        train_cfg.get("batch_size", 1),
     )
 
+    grad_accum = max(1, train_cfg.get("grad_accum", 1))
+    max_steps = train_cfg.get("max_steps", 1000)
+    log_interval = train_cfg.get("log_interval", 50)
+
     inj_model.train()
-    for step, batch in enumerate(dataloader):
-        if step >= bcfg["train"]["max_steps"]:
+    optimiser.zero_grad()
+    update_step = 0
+    for step, batch in enumerate(dataloader, start=1):
+        if update_step >= max_steps:
             break
         input_ids = batch["input_ids"].to(device)
         labels = batch["labels"].to(device)
         attention_mask = batch["attention_mask"].to(device)
         question_time = batch["question_time"].to(device)
-        optimiser.zero_grad()
         logits = inj_model(input_ids, attention_mask=attention_mask, question_time=question_time)
         loss = F.cross_entropy(
             logits.view(-1, logits.size(-1)),
             labels.view(-1),
             ignore_index=-100,
-        )
+        ) / grad_accum
         loss.backward()
-        optimiser.step()
-        if step % bcfg["train"]["log_interval"] == 0:
-            print(f"Step {step}: loss = {loss.item():.4f}")
-    print("Training complete (Stage A stub)")
+        if step % grad_accum == 0:
+            optimiser.step()
+            optimiser.zero_grad()
+            update_step += 1
+            if update_step % log_interval == 0:
+                print(f"Update {update_step}: loss = {loss.item() * grad_accum:.4f}")
+    print(f"Training complete (Stage A) – updates run: {update_step}")
 
 
 if __name__ == "__main__":
