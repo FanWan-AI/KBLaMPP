@@ -15,6 +15,11 @@ python offline/build_index.py --store_dir store --method hnsw
 
 import argparse
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.append(str(ROOT))
+
 import numpy as np
 from kblampp.knowledge_index import KnowledgeIndex
 

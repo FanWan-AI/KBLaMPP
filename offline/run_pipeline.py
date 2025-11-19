@@ -50,6 +50,8 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg_path = Path(args.config)
+    if not cfg_path.is_absolute():
+        cfg_path = ROOT / cfg_path
     with cfg_path.open() as f:
         cfg = yaml.safe_load(f)
 

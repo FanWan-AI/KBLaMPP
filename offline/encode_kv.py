@@ -211,7 +211,7 @@ def main() -> None:
         with torch.no_grad():
             K = mlp_k(whole_h).cpu().numpy().astype("float32")
             V = mlp_v(torch.cat([whole_t, e_tau], dim=-1)).cpu().numpy().astype("float32")
-        ctx_vec = ctx_projector(torch.from_numpy(e_c).to(device)).cpu().numpy().astype("float32")
+            ctx_vec = ctx_projector(torch.from_numpy(e_c).to(device)).cpu().numpy().astype("float32")
         tau_min_arr = tau_min_tensor.cpu().numpy().astype("float32")
         tau_max_arr = tau_max_tensor.cpu().numpy().astype("float32")
     else:
