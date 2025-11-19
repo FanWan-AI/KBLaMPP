@@ -24,6 +24,7 @@ Multiple injection points can be added by repeating this pattern.
 from __future__ import annotations
 
 from typing import List, Optional
+
 import torch
 import torch.nn as nn
 from transformers import PreTrainedModel
@@ -62,6 +63,8 @@ class KBInjectedModel(nn.Module):
         kb_store: KBValueStore,
         d_k: int,
         d_v: int,
+        d_ctx: int,
+        k_top: int,
     ) -> None:
         super().__init__()
         self.backbone = backbone
@@ -70,10 +73,18 @@ class KBInjectedModel(nn.Module):
         self.fusion = fusion
         self.index = index
         self.kb_store = kb_store
+        self.d_ctx = d_ctx
+        self.k_top = k_top
         self.linear_q = nn.Linear(backbone.config.hidden_size, d_k, bias=False)
         self.linear_v = nn.Linear(d_v, backbone.config.hidden_size, bias=False)
 
-    def forward(self, input_ids: torch.Tensor, attention_mask: Optional[torch.Tensor] = None, **kwargs) -> torch.Tensor:
+    def forward(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: Optional[torch.Tensor] = None,
+        question_time: Optional[torch.Tensor] = None,
+        **kwargs,
+    ) -> torch.Tensor:
         """Forward pass with knowledge injection.
 
         Note: In this Plan B stub, we assume a single injection layer.
@@ -81,7 +92,8 @@ class KBInjectedModel(nn.Module):
         See the comments below for guidance.
         """
         # 1. Run embedding and first few layers
-        hidden_states = self.backbone.model.embed_tokens(input_ids)
+        embed = self.backbone.get_input_embeddings()
+        hidden_states = embed(input_ids)
         # Position IDs / Rotary etc. are handled by HuggingFace; we skip details here.
         # We run through each block up to inject_layer - 1
         blocks: List[nn.Module] = list(self.backbone.model.layers)
@@ -95,23 +107,27 @@ class KBInjectedModel(nn.Module):
         B, T, d_k = Q.shape
         # 3. Flatten Q and perform ANN search
         Q_flat = Q.detach().cpu().numpy().reshape(B*T, d_k)
-        _, idx = self.index.query(Q_flat.astype('float32'), self.selector.ctx_scorer.mlp[-1].out_features)
+        _, idx = self.index.query(Q_flat.astype('float32'), self.k_top)
         # idx: [B*T,K]
         # 4. Fetch KB entries from store
         K_kb, V_kb, ctx_vec, rel_id, ent_id, tau_min, tau_max = self.kb_store.fetch(idx)
         # Reshape to [B,T,K,?]
         K_kb = K_kb.view(B, T, -1, d_k)
         V_kb = V_kb.view(B, T, -1, self.linear_v.in_features)
-        ctx_vec = ctx_vec.view(B, T, -1, self.selector.ctx_scorer.mlp[0].in_features - d_k)
+        ctx_vec = ctx_vec.view(B, T, self.k_top, self.d_ctx)
         rel_id = rel_id.view(B, T, -1)
         ent_id = ent_id.view(B, T, -1)
         tau_min = tau_min.view(B, T, -1)
         tau_max = tau_max.view(B, T, -1)
 
         # 5. Use selector to compute alpha and V_tilde
-        # In this simple stub we set q_min/q_max to zeros (no time filtering)
-        zeros = torch.zeros((B, T), device=hidden_states.device)
-        alpha, V_tilde = self.selector(Q, K_kb, V_kb, ctx_vec, rel_id, ent_id, zeros, zeros, tau_min, tau_max)
+        if question_time is None:
+            q_min = q_max = torch.zeros((B, T), device=hidden_states.device)
+        else:
+            question_time = question_time.to(hidden_states.device)
+            q_min = question_time[:, 0].unsqueeze(1).expand(-1, T)
+            q_max = question_time[:, 1].unsqueeze(1).expand(-1, T)
+        alpha, V_tilde = self.selector(Q, K_kb, V_kb, ctx_vec, rel_id, ent_id, q_min, q_max, tau_min, tau_max)
         # 6. Project V_tilde to model dimension
         V_proj = self.linear_v(V_tilde)  # [B,T,d_model]
         # 7. Fuse with hidden_states using KBFusionLayer
