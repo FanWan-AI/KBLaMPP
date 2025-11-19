@@ -1,0 +1,21 @@
+backbone: "Qwen/Qwen2.5-3B-Instruct"
+d_model: 3072
+d_k: 512
+d_v: 512
+embedding_model: "BAAI/bge-small-en-v1.5"
+d_ctx: 384
+inject_layers: [12, 20]
+K_top: 16
+gamma: 1.0
+eta: 1.0
+temperature: 1.0
+
+train:
+  batch_size: 1
+  max_seq_len: 512
+  lr: 5e-4
+  weight_decay: 0.01
+  max_steps: 5000
+  log_interval: 50
+  save_interval: 1000
+  grad_accum: 4
