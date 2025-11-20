@@ -23,7 +23,12 @@ from torch.utils.data import DataLoader, Dataset
 
 
 class QADataset(Dataset):
-    """A Dataset for KBLaM++ question answering tasks."""
+    """Lightweight JSONL dataset wrapper used across Plan B experiments.
+
+    Each record mirrors the synthetic/converted QA format described in the
+    documentation, so we can derive prompts, labels and optional supervision
+    signals without additional preprocessing scripts.
+    """
 
     def __init__(self, qa_path: str, tokenizer, max_seq_len: int = 512, prompt_template: str = "Question: {question}\nAnswer: ") -> None:
         self.records: List[Dict[str, object]] = []
@@ -51,6 +56,8 @@ class QADataset(Dataset):
             add_special_tokens=True,
             return_tensors="pt",
         )
+        # Always append eos so the loss is well-defined even when the dataset
+        # does not include punctuation/terminators.
         answer_suffix = answer + (self.tokenizer.eos_token or "")
         answer_enc = self.tokenizer(
             answer_suffix,
@@ -66,6 +73,9 @@ class QADataset(Dataset):
         labels = [-100] * len(question_ids) + answer_ids
 
         if len(input_ids) > self.max_seq_len:
+            # Hard truncate from the end; this keeps the question intact and
+            # drops the tail of the answer, which is acceptable for quick
+            # Stage A experiments.  Longer-term we may add sliding windows.
             overflow = len(input_ids) - self.max_seq_len
             input_ids = input_ids[:-overflow]
             labels = labels[:-overflow]
@@ -83,6 +93,8 @@ class QADataset(Dataset):
         }
 
     def collate_fn(self, batch: List[Dict[str, torch.Tensor]]) -> Dict[str, torch.Tensor]:
+        # Dynamic padding keeps the actual sequence length close to the data
+        # distribution, which reduces memory pressure on small GPUs.
         pad_len = max(item["input_ids"].size(0) for item in batch)
         input_ids = torch.stack([
             F.pad(item["input_ids"], (0, pad_len - item["input_ids"].size(0)), value=self.pad_token_id)
@@ -117,5 +129,6 @@ class QADataset(Dataset):
 
 
 def get_dataloader(path: str, tokenizer, max_seq_len: int, batch_size: int) -> DataLoader:
+    """Factory used by training scripts to keep their setup minimal."""
     ds = QADataset(path, tokenizer, max_seq_len=max_seq_len)
     return DataLoader(ds, batch_size=batch_size, shuffle=True, collate_fn=ds.collate_fn)

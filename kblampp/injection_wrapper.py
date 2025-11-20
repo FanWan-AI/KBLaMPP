@@ -105,7 +105,9 @@ class KBInjectedModel(nn.Module):
         # 2. Compute query vectors at injection layer
         Q = self.linear_q(hidden_states)  # [B,T,d_k]
         B, T, d_k = Q.shape
-        # 3. Flatten Q and perform ANN search
+        # 3. Flatten Q and perform ANN search.  Detaching before the FAISS call
+        # avoids unnecessary autograd tracking whilst keeping the GPU<->CPU
+        # transfer explicit.
         Q_flat = Q.detach().cpu().numpy().reshape(B*T, d_k)
         _, idx = self.index.query(Q_flat.astype('float32'), self.k_top)
         # idx: [B*T,K]

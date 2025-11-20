@@ -50,6 +50,8 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg_path = Path(args.config)
+    # Allow running the script from any subdirectory (offline/, project root,
+    # CI, etc.) by resolving relative config paths against repo ROOT.
     if not cfg_path.is_absolute():
         cfg_path = ROOT / cfg_path
     with cfg_path.open() as f:

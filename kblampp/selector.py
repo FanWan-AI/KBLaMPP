@@ -81,6 +81,7 @@ class KBSelector(nn.Module):
             The weighted sum of Value vectors for each token.
         """
         # Semantic similarity (Q·K) / sqrt(d_k)
+        # This mirrors standard self-attention to keep magnitudes comparable.
         sem = torch.einsum("btd,btkd->btk", Q, K_kb) / math.sqrt(Q.size(-1))
         # Context matching
         ctx_score = self.ctx_scorer(Q, ctx_vec, rel_id, ent_id)
@@ -88,6 +89,9 @@ class KBSelector(nn.Module):
         time_score = self.time_scorer(q_min, q_max, tau_min, tau_max)
         # Combine scores
         s = sem + self.gamma * ctx_score + self.eta * time_score
+        # Subtracting the max keeps the subsequent softmax stable for large
+        # logits—critical when the selector sees long contexts with varied
+        # scalar ranges.
         s = s - s.max(dim=-1, keepdim=True).values  # numerical stability
         alpha = torch.softmax(s / self.temperature, dim=-1)  # [B,T,K]
         # Weighted sum of values

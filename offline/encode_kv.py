@@ -102,13 +102,33 @@ def fallback_random_embeddings(size: tuple[int, int], seed: int) -> np.ndarray:
     return rng.standard_normal(size).astype("float32")
 
 
-def load_five_tuples(path: Path) -> tuple[List[str], List[str], List[str], List[str], List[float], List[float]]:
+def build_id_sequence(values: List[str]) -> np.ndarray:
+    """Map arbitrary string identifiers to a dense 0..N-1 integer range.
+
+    Saving compact IDs makes downstream embedding tables cheaper and ensures
+    that selectors can look up relation/entity metadata without string hashing
+    inside the training loop.
+    """
+    mapping: dict[str, int] = {}
+    seq = []
+    for value in values:
+        if value not in mapping:
+            mapping[value] = len(mapping)
+        seq.append(mapping[value])
+    return np.array(seq, dtype="int64")
+
+
+def load_five_tuples(path: Path) -> tuple[
+    List[str], List[str], List[str], List[str], List[float], List[float], List[str], List[str]
+]:
     heads: List[str] = []
     rels: List[str] = []
     tails: List[str] = []
     contexts: List[str] = []
     tau_min_list: List[float] = []
     tau_max_list: List[float] = []
+    head_ids: List[str] = []
+    rel_ids: List[str] = []
     with path.open(encoding="utf-8") as f:
         for line in f:
             rec = json.loads(line)
@@ -122,7 +142,9 @@ def load_five_tuples(path: Path) -> tuple[List[str], List[str], List[str], List[
             end_ts = parse_timestamp(end) if end else start_ts
             tau_min_list.append(start_ts)
             tau_max_list.append(end_ts)
-    return heads, rels, tails, contexts, tau_min_list, tau_max_list
+            head_ids.append(rec["head"].get("id", ""))
+            rel_ids.append(rec["relation"].get("id", ""))
+    return heads, rels, tails, contexts, tau_min_list, tau_max_list, head_ids, rel_ids
 
 
 def main() -> None:
@@ -144,9 +166,12 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "meta").mkdir(exist_ok=True)
 
-    heads, rels, tails, contexts, tau_min_list, tau_max_list = load_five_tuples(input_path)
+    heads, rels, tails, contexts, tau_min_list, tau_max_list, head_ids, rel_ids = load_five_tuples(input_path)
     N = len(heads)
     d_k, d_v, d_ctx, d_tau = args.d_k, args.d_v, args.d_ctx, args.d_tau
+
+    entity_seq = build_id_sequence(head_ids)
+    rel_seq = build_id_sequence(rel_ids)
 
     if HAS_TORCH:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -222,13 +247,16 @@ def main() -> None:
         tau_min_arr = np.array(tau_min_list, dtype="float32")
         tau_max_arr = np.array(tau_max_list, dtype="float32")
 
+    # Persist all artefacts; the meta folder mirrors what the selector expects
+    # at runtime, so extending it with new tensors (e.g. relation types) is
+    # straightforward.
     np.save(output_dir / "K.npy", K)
     np.save(output_dir / "V.npy", V)
     np.save(output_dir / "meta" / "ctx_vec.npy", ctx_vec)
     np.save(output_dir / "meta" / "tau_min.npy", tau_min_arr)
     np.save(output_dir / "meta" / "tau_max.npy", tau_max_arr)
-    np.save(output_dir / "meta" / "entity_ids.npy", np.zeros(N, dtype=np.int64))
-    np.save(output_dir / "meta" / "rel_ids.npy", np.zeros(N, dtype=np.int64))
+    np.save(output_dir / "meta" / "entity_ids.npy", entity_seq)
+    np.save(output_dir / "meta" / "rel_ids.npy", rel_seq)
     print(f"Encoded {N} five-tuples into {output_dir}")
 
 

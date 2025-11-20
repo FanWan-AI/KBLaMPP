@@ -71,6 +71,9 @@ def main():
     else:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     backbone = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    # Stage A freezes every backbone parameter so that we only train the KB
+    # modules.  This keeps memory usage predictable on small GPUs and matches
+    # the Plan B spec in the docs.
     backbone.requires_grad_(False)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     if tokenizer.pad_token is None:
@@ -78,6 +81,8 @@ def main():
         tokenizer.pad_token_id = tokenizer.eos_token_id
 
     # Knowledge components
+    # The index + store encapsulate all offline artefacts, keeping the training
+    # loop agnostic to how the KB was produced.
     index = KnowledgeIndex.load(str(index_dir))
     kb_store = KBValueStore(str(store_root), device)
     d_k, d_v, d_ctx = bcfg["d_k"], bcfg["d_v"], bcfg["d_ctx"]
@@ -126,6 +131,9 @@ def main():
         attention_mask = batch["attention_mask"].to(device)
         question_time = batch["question_time"].to(device)
         logits = inj_model(input_ids, attention_mask=attention_mask, question_time=question_time)
+        # Standard causal LM loss; dividing by grad_accum lets us call backward
+        # every step without scaling issues when we only step the optimiser
+        # every ``grad_accum`` mini-batches.
         loss = F.cross_entropy(
             logits.view(-1, logits.size(-1)),
             labels.view(-1),

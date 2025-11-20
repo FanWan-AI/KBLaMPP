@@ -54,6 +54,14 @@ class KnowledgeIndex:
     index: Optional[faiss.Index] = None
 
     def _l2_normalise(self, X: np.ndarray) -> np.ndarray:
+        """Optionally L2 normalise key/query vectors for cosine similarity.
+
+        The FAISS inner-product indices operate on raw dot products, so to
+        approximate cosine similarity we normalise each vector to unit length
+        before inserting/querying.  The tiny epsilon avoids division by zero
+        for degenerate vectors that occasionally show up during early
+        experiments.
+        """
         if self.similarity != "cosine":
             return X
         norms = np.linalg.norm(X, axis=1, keepdims=True) + 1e-12
@@ -72,12 +80,16 @@ class KnowledgeIndex:
         keys_norm = self._l2_normalise(keys)
 
         if self.method == "hnsw":
+            # HNSW works well for medium-sized stores (<1M entries) and keeps
+            # build/query times predictable for Plan B scale experiments.
             index = faiss.IndexHNSWFlat(self.dim, 32, faiss.METRIC_INNER_PRODUCT)
             index.hnsw.efConstruction = 200
             index.add(keys_norm)
             index.hnsw.efSearch = 64
         elif self.method == "ivfpq":
-            # IVFPQ builder for larger datasets
+            # IVFPQ builder for larger datasets where memory becomes an issue.
+            # The parameters below are conservative defaults; feel free to tune
+            # them for your KB density/profile.
             nlist = 4096
             m = 16  # PQ subdivisions
             nbits = 8
@@ -111,6 +123,8 @@ class KnowledgeIndex:
         if self.index is None:
             raise RuntimeError("Index has not been built.  Call fit() first.")
         assert queries.shape[1] == self.dim, "Query dimension mismatch"
+        # Convert to float32 because FAISS bindings expect contiguous float32
+        # buffers; float16/64 inputs would otherwise trigger subtle segfaults.
         queries_norm = self._l2_normalise(queries.astype(np.float32))
         D, I = self.index.search(queries_norm, k)
         return D, I

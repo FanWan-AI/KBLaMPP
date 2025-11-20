@@ -81,6 +81,8 @@ class ContextScorer(nn.Module):
             feats.append(self.rel_emb(rel_id))  # [B,T,K,16]
         if self.use_ent:
             feats.append(self.ent_emb(ent_id))  # [B,T,K,16]
+        # Concatenate the semantic and symbolic features so the MLP can learn
+        # how much each signal should matter for a given backbone.
         x = torch.cat(feats, dim=-1)  # [B,T,K,in_dim]
         scores = self.mlp(x).squeeze(-1)  # [B,T,K]
         return scores
@@ -121,12 +123,16 @@ class TimeScorer(nn.Module):
         # broadcast q_min/q_max to [B,T,K]
         qmin = q_min.unsqueeze(-1).expand_as(tau_min)
         qmax = q_max.unsqueeze(-1).expand_as(tau_max)
+        # Intersection-over-union captures whether the query time window overlaps
+        # the candidate fact at all; clamping avoids negative intervals.
         inter = (torch.min(qmax, tau_max) - torch.max(qmin, tau_min)).clamp(min=0)
         union = (torch.max(qmax, tau_max) - torch.min(qmin, tau_min)).clamp(min=1e-8)
         iou = inter / union  # [B,T,K]
         q_cent = (qmin + qmax) * 0.5
         t_cent = (tau_min + tau_max) * 0.5
         delta = (q_cent - t_cent).abs()  # [B,T,K]
+        # The Gaussian encourages candidates with similar centres even if the
+        # windows do not overlap perfectly (useful for noisy annotations).
         gaussian = torch.exp(-(delta ** 2) / (2 * (self.sigma ** 2)))
         score = self.lambda_iou * iou + self.lambda_delta * gaussian
         return score

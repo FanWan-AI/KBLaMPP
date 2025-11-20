@@ -40,6 +40,9 @@ class KBValueStore:
 
     def __init__(self, root: str, device: torch.device) -> None:
         self.device = device
+        # Using memmaps keeps the resident memory footprint constant, which is
+        # important when the store holds hundreds of thousands of entries.  The
+        # arrays are only materialised on the GPU when ``fetch`` is invoked.
         self.K = np.load(f"{root}/K.npy", mmap_mode="r").astype(np.float32)
         self.V = np.load(f"{root}/V.npy", mmap_mode="r").astype(np.float32)
         # context vectors, time minima/maxima and IDs
@@ -77,7 +80,10 @@ class KBValueStore:
         tau_max : torch.Tensor of shape (B*T, K)
         """
         assert idx.ndim == 2
-        # Use advanced indexing into the numpy memmaps
+        # NumPy handles the heavy lifting here: fancy indexing creates compact
+        # arrays containing just the requested rows.  Converting to Torch tensors
+        # afterwards minimises PCIe copies because PyTorch can ingest the
+        # contiguous buffers directly.
         K_batch = torch.from_numpy(self.K[idx]).to(self.device)
         V_batch = torch.from_numpy(self.V[idx]).to(self.device)
         ctx_batch = torch.from_numpy(self.ctx_vec[idx]).to(self.device)

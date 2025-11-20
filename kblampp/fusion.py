@@ -63,12 +63,15 @@ class KBFusionLayer(nn.Module):
         beta : torch.Tensor [B, T, 1]
             The gate values applied to knowledge attention.
         """
-        # text branch
+        # text branch: behaves like the original self-attention to preserve the
+        # backbone's behaviour when no knowledge is injected.
         Y_txt, _ = self.text_mha(h, h, h, attn_mask=attn_mask)
-        # knowledge branch (Q,K come from h, V comes from V_kb_tilde)
+        # knowledge branch (Q,K use backbone states, V comes from KB) so the
+        # model can treat injected information as an auxiliary attention stream.
         Y_kb, _ = self.kb_mha(h, h, V_kb_tilde, attn_mask=attn_mask)
         # gate
         beta = torch.sigmoid(self.beta_head(h))  # [B,T,1]
-        # fuse
+        # fuse the two streams; gating keeps gradients well-behaved when the KB
+        # content is noisy because the model can down-weight it token-wise.
         Y = Y_txt + beta * Y_kb
         return Y, beta
