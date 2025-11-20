@@ -98,7 +98,7 @@ Return ONLY a JSON object matching the schema:
 
 Rules:
 1. Reuse ONLY the provided entity IDs (no new IDs) and keep facts consistent with summaries.
-2. Each fact must be unique, time-stamped (2005-01-01 to 2025-12-31) and human-readable.
+2. Each fact must be unique, time-stamped (2005-01-01 to 2024-12-31) and human-readable.
 3. Include collaborations, funding chains, leadership changes, conference participation, acquisitions, etc., to ensure multi-hop reasoning.
 4. Do not repeat identical context sentences; vary phrasing and include concrete numbers/dates when possible.
 5. Never repeat the same (head, relation, tail, start-date) combination across facts.
@@ -318,6 +318,7 @@ def generate_fact_batches(
     seen_keys: Set[Tuple[str, str, str, str]] = set()
     current_batch_size = min(args.facts_per_call, total)
     min_batch_size = min(args.min_facts_per_call, total)
+    empty_min_failures = 0
     try:
         while len(facts) < total:
             remaining = total - len(facts)
@@ -354,13 +355,24 @@ def generate_fact_batches(
             if not normalized:
                 if current_batch_size > min_batch_size:
                     current_batch_size = max(min_batch_size, max(1, batch_size // 2))
+                    empty_min_failures = 0
                     log(
                         f"{label}: no usable facts accepted; reducing batch size to {current_batch_size} and retrying"
                     )
                     continue
-                log(f"{label}: no usable facts accepted even at minimum batch size; retrying")
+                empty_min_failures += 1
+                if empty_min_failures >= args.max_attempts:
+                    raise RuntimeError(
+                        f"{label}: no usable facts accepted after {empty_min_failures} attempts at minimum batch size; "
+                        "check prompt instructions or relax filters"
+                    )
+                log(
+                    f"{label}: no usable facts accepted even at minimum batch size; retrying "
+                    f"({empty_min_failures}/{args.max_attempts})"
+                )
                 continue
             facts.extend(normalized)
+            empty_min_failures = 0
             chunk += 1
             progress_bar(len(facts), total, width=args.progress_width)
     finally:
