@@ -27,15 +27,20 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
+from datetime import date
 from pathlib import Path
 from string import Template
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Set, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from kblampp.utils.gpt_session import LocalGPT
+
+DATE_MIN = date(2005, 1, 1)
+DATE_MAX = date(2024, 12, 31)
 
 
 ENTITY_PROMPT_TEMPLATE = Template(
@@ -82,7 +87,7 @@ Return ONLY a JSON object matching the schema:
             "ver": {"url": null, "rev_id": null}
         },
         "time_window": {
-            "start": "YYYY-MM-DD",  # required
+            "start": "YYYY-MM-DD",  # required and MUST be between 2005-01-01 and 2024-12-31 (inclusive)
             "end": "YYYY-MM-DD" or null,
             "source": "text_infer"
         }
@@ -96,7 +101,8 @@ Rules:
 2. Each fact must be unique, time-stamped (2005-01-01 to 2025-12-31) and human-readable.
 3. Include collaborations, funding chains, leadership changes, conference participation, acquisitions, etc., to ensure multi-hop reasoning.
 4. Do not repeat identical context sentences; vary phrasing and include concrete numbers/dates when possible.
-5. Output valid JSON with no trailing commas or explanation text.
+5. Never repeat the same (head, relation, tail, start-date) combination across facts.
+6. Output valid JSON with no trailing commas or explanation text.
 """
 )
 
@@ -143,6 +149,21 @@ def progress_bar(current: int, total: int, width: int = 32) -> None:
 
 def end_progress() -> None:
     print("", flush=True)
+
+
+def parse_iso_date(value: str | None) -> date | None:
+    if not value:
+        return None
+    try:
+        return date.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def date_within_range(day: date | None) -> bool:
+    if day is None:
+        return False
+    return DATE_MIN <= day <= DATE_MAX
 
 
 def ensure_entity_ids(entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -214,22 +235,40 @@ def ensure_entity_refs(slot: Dict[str, Any], lookup: Dict[str, Dict[str, Any]]) 
     slot.setdefault("type", match.get("type"))
 
 
-def normalize_facts(
+def filter_and_normalize_facts(
     raw_facts: List[Dict[str, Any]],
     relation_start_index: int,
     entity_lookup: Dict[str, Dict[str, Any]],
-) -> Tuple[List[Dict[str, Any]], int]:
-    normalized: List[Dict[str, Any]] = []
+    seen_keys: Set[Tuple[str, str, str, str]],
+) -> Tuple[List[Dict[str, Any]], int, Counter]:
+    accepted: List[Dict[str, Any]] = []
     relation_index = relation_start_index
+    stats: Counter = Counter()
     for fact in raw_facts:
-        ensure_entity_refs(fact["head"], entity_lookup)
-        ensure_entity_refs(fact["tail"], entity_lookup)
-        fact.setdefault("relation", {})
-        fact["relation"]["id"] = f"R{relation_index:04d}"
-        relation_index += 1
-        validate_fact(fact)
-        normalized.append(fact)
-    return normalized, relation_index
+        try:
+            ensure_entity_refs(fact["head"], entity_lookup)
+            ensure_entity_refs(fact["tail"], entity_lookup)
+            validate_fact(fact)
+            relation_name = (fact["relation"].get("name") or "").strip()
+            if not relation_name:
+                raise ValueError("Relation missing descriptive name")
+            start_str = fact["time_window"].get("start")
+            start_date = parse_iso_date(start_str)
+            if not date_within_range(start_date):
+                stats["out_of_range"] += 1
+                continue
+            key = (fact["head"]["id"], relation_name.lower(), fact["tail"]["id"], start_str)
+            if key in seen_keys:
+                stats["duplicate"] += 1
+                continue
+            seen_keys.add(key)
+            fact.setdefault("relation", {})
+            fact["relation"]["id"] = f"R{relation_index:04d}"
+            relation_index += 1
+            accepted.append(fact)
+        except Exception:
+            stats["invalid"] += 1
+    return accepted, relation_index, stats
 
 
 def request_json_object(
@@ -276,6 +315,7 @@ def generate_fact_batches(
     relation_index = 1
     total = args.num_facts
     chunk = 0
+    seen_keys: Set[Tuple[str, str, str, str]] = set()
     current_batch_size = min(args.facts_per_call, total)
     min_batch_size = min(args.min_facts_per_call, total)
     try:
@@ -301,8 +341,27 @@ def generate_fact_batches(
             if len(batch) != batch_size:
                 log(f"{label}: expected {batch_size} facts, received {len(batch)}; truncating/examining")
                 batch = batch[:batch_size]
-            normalized, relation_index = normalize_facts(batch, relation_index, entity_lookup)
+            normalized, relation_index, stats = filter_and_normalize_facts(
+                batch,
+                relation_index,
+                entity_lookup,
+                seen_keys,
+            )
+            rejected = sum(stats.values())
+            if rejected:
+                details = ", ".join(f"{key}={value}" for key, value in stats.items())
+                log(f"{label}: rejected {rejected} facts ({details})")
+            if not normalized:
+                if current_batch_size > min_batch_size:
+                    current_batch_size = max(min_batch_size, max(1, batch_size // 2))
+                    log(
+                        f"{label}: no usable facts accepted; reducing batch size to {current_batch_size} and retrying"
+                    )
+                    continue
+                log(f"{label}: no usable facts accepted even at minimum batch size; retrying")
+                continue
             facts.extend(normalized)
+            chunk += 1
             progress_bar(len(facts), total, width=args.progress_width)
     finally:
         end_progress()
