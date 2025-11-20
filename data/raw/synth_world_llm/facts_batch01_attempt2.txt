@@ -1,0 +1,157 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "relation": {"name": "collaborated_with"},
+      "tail": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elara Voss",
+        "sent_span": "In 2024, Dr. Elara Voss collaborated with the Global Synapse Initiative to integrate quantum entanglement models into neural interface algorithms.",
+        "disamb": {"country": "CH", "aliases": ["Elara Voss"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2024-03-15",
+        "end": "2024-11-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "relation": {"name": "funded_by"},
+      "tail": {"id": "E0002", "name": "NovaCore Dynamics", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Global Synapse Initiative",
+        "sent_span": "NovaCore Dynamics provided $12 million in funding to the Global Synapse Initiative in 2023 to explore quantum-brain coupling for astronaut cognitive resilience.",
+        "disamb": {"country": "SG", "aliases": ["GSI"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-07-01",
+        "end": "2024-06-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0002", "name": "NovaCore Dynamics", "type": "ORG"},
+      "relation": {"name": "hired"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "NovaCore Dynamics",
+        "sent_span": "In September 2023, NovaCore Dynamics hired Dr. Elara Voss as a senior advisor for quantum propulsion stability.",
+        "disamb": {"country": "SG", "aliases": ["NovaCore"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-09-05",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Dr. Aris Thorne", "type": "PERSON"},
+      "relation": {"name": "leaked_data_to"},
+      "tail": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Aris Thorne",
+        "sent_span": "In February 2033, Dr. Aris Thorne leaked classified genomic sequences from Project Chimera to the Global Synapse Initiative to expose ethical violations.",
+        "disamb": {"country": "IS", "aliases": ["Aris Thorne"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2033-02-14",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "relation": {"name": "hosted_conference_with"},
+      "tail": {"id": "E0007", "name": "The Red Shift Collective", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Global Synapse Initiative",
+        "sent_span": "The Global Synapse Initiative co-hosted a secret symposium with The Red Shift Collective in Reykjavik in June 2037 to discuss AI-driven exoplanet biosignature detection.",
+        "disamb": {"country": "IS", "aliases": ["GSI", "Red Shift"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-06-10",
+        "end": "2037-06-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "The Red Shift Collective", "type": "ORG"},
+      "relation": {"name": "infiltrated"},
+      "tail": {"id": "E0003", "name": "Mount Aether Observatory", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Red Shift Collective",
+        "sent_span": "In October 2037, members of The Red Shift Collective infiltrated Mount Aether Observatory to obtain raw data on the Silent Pulse Anomaly.",
+        "disamb": {"country": "US", "aliases": ["Red Shift"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-10-22",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0003", "name": "Mount Aether Observatory", "type": "LOC"},
+      "relation": {"name": "detected"},
+      "tail": {"id": "E0013", "name": "The Silent Pulse Anomaly", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mount Aether Observatory",
+        "sent_span": "Mount Aether Observatory first detected The Silent Pulse Anomaly on January 18, 2041, recording 78 hours of unexplained radio silence from the direction of Proxima Centauri.",
+        "disamb": {"country": "US", "aliases": ["Aether Observatory"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2041-01-18",
+        "end": "2041-01-21",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "Dr. Selene Reyes", "type": "PERSON"},
+      "relation": {"name": "worked_at"},
+      "tail": {"id": "E0007", "name": "The Red Shift Collective", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Selene Reyes",
+        "sent_span": "Dr. Selene Reyes worked with The Red Shift Collective from 2037 to 2039 while conducting independent analysis of Ceres surface anomalies.",
+        "disamb": {"country": "US", "aliases": ["Selene Reyes"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-03-01",
+        "end": "2039-08-22",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "Dr. Selene Reyes", "type": "PERSON"},
+      "relation": {"name": "discovered"},
+      "tail": {"id": "E0016", "name": "The Ceres Ice Treaty", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Selene Reyes",
+        "sent_span": "Dr. Selene Reyes' 2039 discovery of subsurface ice on Ceres directly prompted the negotiations leading to the Ceres Ice Treaty in 2040.",
+        "disamb": {"country": "US", "aliases": ["Reyes"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2039-05-17",
+        "end": "2040-06-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0016", "name": "

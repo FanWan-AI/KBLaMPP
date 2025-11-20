@@ -1,0 +1,159 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "relation": {"name": "collaborated_with"},
+      "tail": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elara Voss",
+        "sent_span": "In 2026, Dr. Elara Voss collaborated with the Global Synapse Initiative to integrate quantum entanglement models into neural interface synchronization algorithms.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2026-03-15",
+        "end": "2026-11-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "relation": {"name": "funded_by"},
+      "tail": {"id": "E0002", "name": "NovaCore Dynamics", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Global Synapse Initiative",
+        "sent_span": "NovaCore Dynamics provided $4.2 million in funding to the Global Synapse Initiative in 2027 to explore quantum brain-computer interfaces for astronaut cognitive resilience.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2027-01-10",
+        "end": "2027-12-20",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "relation": {"name": "advised"},
+      "tail": {"id": "E0009", "name": "Chief Systems Architect", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elara Voss",
+        "sent_span": "From June to September 2027, Dr. Elara Voss advised the Chief Systems Architect at NovaCore Dynamics on quantum stabilization protocols for fusion drives.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2027-06-01",
+        "end": "2027-09-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Dr. Aris Thorne", "type": "PERSON"},
+      "relation": {"name": "leaked_data_to"},
+      "tail": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Aris Thorne",
+        "sent_span": "In April 2033, Dr. Aris Thorne leaked classified genomic sequences from Project Chimera to the Global Synapse Initiative to expose ethical violations.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2033-04-12",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0005", "name": "Project Chimera", "type": "EVENT"},
+      "relation": {"name": "led_by"},
+      "tail": {"id": "E0015", "name": "Dr. Aris Thorne", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Project Chimera",
+        "sent_span": "Dr. Aris Thorne led Project Chimera from its inception in 2028 until his defection in February 2033.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2028-05-18",
+        "end": "2033-02-28",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0005", "name": "Project Chimera", "type": "EVENT"},
+      "relation": {"name": "oversaw"},
+      "tail": {"id": "E0010", "name": "Director of Xenobiology", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Project Chimera",
+        "sent_span": "The Director of Xenobiology oversaw the cloning and adaptation of woolly mammoth hybrids during Project Chimera's operations from 2028 to 2033.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2028-06-01",
+        "end": "2033-01-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "Director of Xenobiology", "type": "ROLE"},
+      "relation": {"name": "held_by"},
+      "tail": {"id": "E0015", "name": "Dr. Aris Thorne", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Director of Xenobiology",
+        "sent_span": "Dr. Aris Thorne held the position of Director of Xenobiology at Project Chimera from 2028 until his resignation in early 2033.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2028-05-20",
+        "end": "2033-02-14",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "Dr. Selene Reyes", "type": "PERSON"},
+      "relation": {"name": "worked_with"},
+      "tail": {"id": "E0007", "name": "The Red Shift Collective", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Selene Reyes",
+        "sent_span": "Dr. Selene Reyes worked with the Red Shift Collective in 2038 to validate the authenticity of anomalous subsurface ice signals on Ceres.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2038-07-03",
+        "end": "2038-12-22",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "The Red Shift Collective", "type": "ORG"},
+      "relation": {"name": "exposed"},
+      "tail": {"id": "E0013", "name": "The Silent Pulse Anomaly", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Red Shift Collective",
+        "sent_span": "In 2041, the Red Shift Collective exposed the Mount Aether Observatory's detection of the Silent Pulse Anomaly after hacking into its secure logs.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2041-08-11",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0003", "name": "Mount Aether Observatory", "type": "LOC"},
+      "relation": {"name": "detected"},
+      "tail": {"id": "E0013",

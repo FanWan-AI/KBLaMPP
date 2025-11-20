@@ -1,0 +1,236 @@
+{
+  "entities": [
+    {"id": "E0001", "name": "NexaCore Dynamics", "type": "ORG", "summary": "A US-based technology company specializing in quantum computing and AI infrastructure."},
+    {"id": "E0002", "name": "Dr. Elena Marquez", "type": "PERSON", "summary": "Chief Scientist at NexaCore Dynamics and leading researcher in quantum algorithms."},
+    {"id": "E0003", "name": "Quantum Future Initiative", "type": "ORG", "summary": "A government-funded research consortium focused on advancing quantum technologies."},
+    {"id": "E0004", "name": "Silicon Valley", "type": "LOC", "summary": "A major technology hub in California, home to numerous tech startups and research labs."},
+    {"id": "E0005", "name": "Dr. Rajiv Mehta", "type": "PERSON", "summary": "Director of the Quantum Future Initiative and former professor at Stanford University."},
+    {"id": "E0006", "name": "OmniSynth Labs", "type": "ORG", "summary": "An AI startup known for developing generative models for scientific discovery."},
+    {"id": "E0007", "name": "Dr. Lin Xiao", "type": "PERSON", "summary": "Co-founder and CTO of OmniSynth Labs, specializing in neural-symbolic systems."},
+    {"id": "E0008", "name": "Project Astra", "type": "EVENT", "summary": "A joint research effort between NexaCore and OmniSynth to integrate quantum computing with generative AI."},
+    {"id": "E0009", "name": "Dr. Helen Cho", "type": "PERSON", "summary": "Lead engineer on Project Astra and principal investigator at NexaCore Dynamics."},
+    {"id": "E0010", "name": "San Francisco", "type": "LOC", "summary": "A major city in California where OmniSynth Labs is headquartered."},
+    {"id": "E0011", "name": "Quantum Leap Conference", "type": "EVENT", "summary": "An annual conference where breakthroughs in quantum computing are presented."},
+    {"id": "E0012", "name": "Chief Architect", "type": "ROLE", "summary": "A senior technical leadership role responsible for system design and integration."},
+    {"id": "E0013", "name": "2023-06-15", "type": "DATE", "summary": "The official launch date of Project Astra."},
+    {"id": "E0014", "name": "Dr. Thomas Reed", "type": "PERSON", "summary": "Former Chief Architect at NexaCore Dynamics who retired in 2022."},
+    {"id": "E0015", "name": "NeuroGrid Systems", "type": "ORG", "summary": "A Boston-based company developing brain-inspired computing architectures."},
+    {"id": "E0016", "name": "Boston", "type": "LOC", "summary": "A city in Massachusetts known for its academic institutions and tech innovation."},
+    {"id": "E0017", "name": "Dr. Amara Singh", "type": "PERSON", "summary": "Lead researcher at NeuroGrid Systems working on neuromorphic hardware."},
+    {"id": "E0018", "name": "2021-09-01", "type": "DATE", "summary": "The date Dr. Rajiv Mehta became Director of the Quantum Future Initiative."}
+  ],
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "NexaCore Dynamics", "type": "ORG"},
+      "relation": {"id": "R0001", "name": "employed"},
+      "tail": {"id": "E0002", "name": "Dr. Elena Marquez", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "NexaCore Dynamics",
+        "sent_span": "NexaCore Dynamics employed Dr. Elena Marquez as Chief Scientist in 2019.",
+        "disamb": {"country": "US", "aliases": ["NexaCore"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2019-01-01", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0001", "name": "NexaCore Dynamics", "type": "ORG"},
+      "relation": {"id": "R0002", "name": "located in"},
+      "tail": {"id": "E0004", "name": "Silicon Valley", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "NexaCore Dynamics",
+        "sent_span": "NexaCore Dynamics is located in Silicon Valley, California.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2008-05-10", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0002", "name": "Dr. Elena Marquez", "type": "PERSON"},
+      "relation": {"id": "R0003", "name": "led research team for"},
+      "tail": {"id": "E0008", "name": "Project Astra", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elena Marquez",
+        "sent_span": "Dr. Elena Marquez led the research team for Project Astra starting in 2023.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2023-03-01", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0003", "name": "Quantum Future Initiative", "type": "ORG"},
+      "relation": {"id": "R0004", "name": "funded"},
+      "tail": {"id": "E0008", "name": "Project Astra", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Quantum Future Initiative",
+        "sent_span": "The Quantum Future Initiative funded Project Astra in June 2023.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2023-06-15", "end": "2025-06-15", "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0003", "name": "Quantum Future Initiative", "type": "ORG"},
+      "relation": {"id": "R0005", "name": "led by"},
+      "tail": {"id": "E0005", "name": "Dr. Rajiv Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Quantum Future Initiative",
+        "sent_span": "The Quantum Future Initiative has been led by Dr. Rajiv Mehta since September 2021.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2021-09-01", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0005", "name": "Dr. Rajiv Mehta", "type": "PERSON"},
+      "relation": {"id": "R0006", "name": "affiliated with"},
+      "tail": {"id": "E0016", "name": "Boston", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Rajiv Mehta",
+        "sent_span": "Dr. Rajiv Mehta was affiliated with research institutions in Boston before moving to California in 2018.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2010-07-01", "end": "2018-08-31", "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0006", "name": "OmniSynth Labs", "type": "ORG"},
+      "relation": {"id": "R0007", "name": "co-founded by"},
+      "tail": {"id": "E0007", "name": "Dr. Lin Xiao", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "OmniSynth Labs",
+        "sent_span": "OmniSynth Labs was co-founded by Dr. Lin Xiao in 2020.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2020-03-12", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0006", "name": "OmniSynth Labs", "type": "ORG"},
+      "relation": {"id": "R0008", "name": "located in"},
+      "tail": {"id": "E0010", "name": "San Francisco", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "OmniSynth Labs",
+        "sent_span": "OmniSynth Labs is headquartered in San Francisco, California.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2020-03-12", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0008", "name": "Project Astra", "type": "EVENT"},
+      "relation": {"id": "R0009", "name": "launched on"},
+      "tail": {"id": "E0013", "name": "2023-06-15", "type": "DATE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Project Astra",
+        "sent_span": "Project Astra was officially launched on June 15, 2023.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2023-06-15", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0008", "name": "Project Astra", "type": "EVENT"},
+      "relation": {"id": "R0010", "name": "involved collaboration between"},
+      "tail": {"id": "E0001", "name": "NexaCore Dynamics", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Project Astra",
+        "sent_span": "Project Astra involved collaboration between NexaCore Dynamics and OmniSynth Labs.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2023-03-01", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0008", "name": "Project Astra", "type": "EVENT"},
+      "relation": {"id": "R0011", "name": "involved collaboration between"},
+      "tail": {"id": "E0006", "name": "OmniSynth Labs", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Project Astra",
+        "sent_span": "Project Astra involved collaboration between NexaCore Dynamics and OmniSynth Labs.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2023-03-01", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0009", "name": "Dr. Helen Cho", "type": "PERSON"},
+      "relation": {"id": "R0012", "name": "served as"},
+      "tail": {"id": "E0012", "name": "Chief Architect", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Helen Cho",
+        "sent_span": "Dr. Helen Cho served as Chief Architect for Project Astra from April 2023 onward.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2023-04-01", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0010", "name": "San Francisco", "type": "LOC"},
+      "relation": {"id": "R0013", "name": "hosted"},
+      "tail": {"id": "E0011", "name": "Quantum Leap Conference", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "San Francisco",
+        "sent_span": "San Francisco hosted the Quantum Leap Conference in October 2022.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2022-10-05", "end": "2022-10-07", "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0011", "name": "Quantum Leap Conference", "type": "EVENT"},
+      "relation": {"id": "R0014", "name": "attended by"},
+      "tail": {"id": "E0002", "name": "Dr. Elena Marquez", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Quantum Leap Conference",
+        "sent_span": "Dr. Elena Marquez attended the Quantum Leap Conference in October 2022.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2022-10-05", "end": "2022-10-07", "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0011", "name": "Quantum Leap Conference", "type": "EVENT"},
+      "relation": {"id": "R0015", "name": "attended by"},
+      "tail": {"id": "E0005", "name": "Dr. Rajiv Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Quantum Leap Conference",
+        "sent_span": "Dr. Rajiv Mehta attended the Quantum Leap Conference in October 2022.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2022-10-05", "end": "2022-10-07", "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0001", "name": "NexaCore Dynamics", "type": "ORG"},
+      "relation": {"id": "R0016", "name": "partnered with"},
+      "tail": {"id": "E0006", "name": "OmniSynth Labs", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "NexaCore Dynamics",
+        "sent_span": "NexaCore Dynamics partnered with OmniSynth Labs in early 2023 to advance AI-integrated quantum computing.",
+        "disamb": {"country": "US"},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {"start": "2023-02-01", "end": null, "source": "text_infer"}
+    },
+    {
+      "head": {"id": "E0006", "name": "OmniSynth Labs", "type": "ORG"},
+      "relation": {"id": "R0017", "name": "acquired"},
+      "tail": {"id": "E0015", "name": "NeuroGrid Systems", "type": "ORG"},
+      "context": {
+       

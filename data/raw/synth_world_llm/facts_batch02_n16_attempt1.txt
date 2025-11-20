@@ -1,0 +1,276 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "relation": {"name": "led"},
+      "tail": {"id": "E0003", "name": "Tycho Lunar Research Outpost", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elara Voss",
+        "sent_span": "In 2033, Dr. Elara Voss led a multidisciplinary team at the Tycho Lunar Research Outpost to simulate subsurface ocean conditions similar to Europa.",
+        "disamb": {"country": "US", "aliases": ["Elara Voss"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2033-01-15",
+        "end": "2033-12-10",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0002", "name": "Nova Dynamics", "type": "ORG"},
+      "relation": {"name": "funded"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Nova Dynamics",
+        "sent_span": "In 2040, Nova Dynamics provided a $12 million grant to Dr. Elara Voss to support instrumentation development for the Europa Ocean Expedition.",
+        "disamb": {"country": "SG", "aliases": ["Nova"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2040-03-22",
+        "end": "2041-03-22",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0003", "name": "Tycho Lunar Research Outpost", "type": "LOC"},
+      "relation": {"name": "hosted"},
+      "tail": {"id": "E0010", "name": "Dr. Mireya Cortez", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Tycho Lunar Research Outpost",
+        "sent_span": "Dr. Mireya Cortez conducted a 6-month study on lunar regolith adaptation of GM crops at the Tycho Lunar Research Outpost in 2034.",
+        "disamb": {"country": "US", "aliases": ["Tycho Base"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2034-05-01",
+        "end": "2034-11-01",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0004", "name": "The Great Coral Revival", "type": "EVENT"},
+      "relation": {"name": "initiated by"},
+      "tail": {"id": "E0007", "name": "Global Climate Accord of 2027", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Great Coral Revival",
+        "sent_span": "The Great Coral Revival was formally initiated in 2029 as a direct outcome of funding and coordination mechanisms established by the Global Climate Accord of 2027.",
+        "disamb": {"country": "US", "aliases": ["Coral Revival"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2029-04-22",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0005", "name": "Project Aether", "type": "EVENT"},
+      "relation": {"name": "conducted by"},
+      "tail": {"id": "E0002", "name": "Nova Dynamics", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Project Aether",
+        "sent_span": "Nova Dynamics conducted Project Aether in 2033, deploying high-altitude drones over the Pacific to test atmospheric carbon capture technology.",
+        "disamb": {"country": "SG", "aliases": ["Aether"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2033-08-10",
+        "end": "2033-10-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0006", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
+      "relation": {"name": "collaborated with"},
+      "tail": {"id": "E0011", "name": "TerraForm Inc.", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Kenji Tanaka",
+        "sent_span": "Dr. Kenji Tanaka collaborated with TerraForm Inc. from 2036 to 2038 to integrate engineered soil microbiomes into the Mars Terraforming Simulation Facility.",
+        "disamb": {"country": "US", "aliases": ["Kenji Tanaka"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2036-02-14",
+        "end": "2038-07-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "Global Climate Accord of 2027", "type": "EVENT"},
+      "relation": {"name": "attended by"},
+      "tail": {"id": "E0014", "name": "Director of Extraterrestrial Affairs", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Global Climate Accord of 2027",
+        "sent_span": "Although the role was not yet created, the Director of Extraterrestrial Affairs was later recognized as a successor to the planetary sustainability delegation that attended the 2027 Accord.",
+        "disamb": {"country": "US", "aliases": ["DEA"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2027-06-15",
+        "end": "2027-06-22",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0008", "name": "Aurora Borealis Observatory", "type": "LOC"},
+      "relation": {"name": "detected"},
+      "tail": {"id": "E0013", "name": "The Solar Flare of 2039", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Aurora Borealis Observatory",
+        "sent_span": "The Aurora Borealis Observatory detected the initial coronal mass ejection of The Solar Flare of 2039 on September 3, 2039, providing early warnings to global networks.",
+        "disamb": {"country": "US", "aliases": ["ABO"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2039-09-03",
+        "end": "2039-09-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0009", "name": "Chief Sustainability Officer", "type": "ROLE"},
+      "relation": {"name": "adopted by"},
+      "tail": {"id": "E0002", "name": "Nova Dynamics", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Chief Sustainability Officer",
+        "sent_span": "Nova Dynamics became the first aerospace firm in Singapore to appoint a Chief Sustainability Officer in 2031, aligning with post-Accord regulations.",
+        "disamb": {"country": "SG", "aliases": ["CSO"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2031-01-08",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "Dr. Mireya Cortez", "type": "PERSON"},
+      "relation": {"name": "awarded"},
+      "tail": {"id": "E0004", "name": "The Great Coral Revival", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Mireya Cortez",
+        "sent_span": "Dr. Mireya Cortez was awarded recognition at the 2030 summit of The Great Coral Revival for her contributions to resilient marine agriculture systems.",
+        "disamb": {"country": "US", "aliases": ["Mireya Cortez"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2030-11-17",
+        "end": "2030-11-20",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "TerraForm Inc.", "type": "ORG"},
+      "relation": {"name": "supplied"},
+      "tail": {"id": "E0012", "name": "Mars Transit Hub", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "TerraForm Inc.",
+        "sent_span": "TerraForm Inc. supplied microbial soil packages to the Mars Transit Hub in 2041 for use in orbital greenhouse modules supporting surface missions.",
+        "disamb": {"country": "US", "aliases": ["TerraForm"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2041-05-12",
+        "end": "2041-06-08",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0012", "name": "Mars Transit Hub", "type": "LOC"},
+      "relation": {"name": "orbited"},
+      "tail": {"id": "E0006", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Transit Hub",
+        "sent_span": "Dr. Kenji Tanaka visited the Mars Transit Hub in 2042 during a mission to evaluate terraforming sensor data relayed from the Martian surface.",
+        "disamb": {"country": "US", "aliases": ["MTH"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2042-07-19",
+        "end": "2042-08-03",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0013", "name": "The Solar Flare of 2039", "type": "EVENT"},
+      "relation": {"name": "caused"},
+      "tail": {"id": "E0016", "name": "The Year of Silent Networks", "type": "DATE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Solar Flare of 2039",
+        "sent_span": "The Solar Flare of 2039 caused widespread satellite and internet failures, leading experts to designate 2039 as The Year of Silent Networks.",
+        "disamb": {"country": "US", "aliases": ["2039 Flare"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2039-01-01",
+        "end": "2039-12-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0014", "name": "Director of Extraterrestrial Affairs", "type": "ROLE"},
+      "relation": {"name": "appointed"},
+      "tail": {"id": "E0018", "name": "Dr. Amara Singh", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Director of Extraterrestrial Affairs",
+        "sent_span": "Dr. Amara Singh was appointed as the first Director of Extraterrestrial Affairs in 2041 to oversee interplanetary communication and diplomatic protocols.",
+        "disamb": {"country": "US", "aliases": ["DEA Director"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2041-10-01",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Arctic Data Vault", "type": "LOC"},
+      "relation": {"name": "stored"},
+      "tail": {"id": "E0005", "name": "Project Aether", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Arctic Data Vault",
+        "sent_span": "All classified telemetry and environmental data from Project Aether were securely stored in the Arctic Data Vault in 2034 for long-term archival.",
+        "disamb": {"country": "US", "aliases": ["Svalbard Vault"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2034-02-11",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0017", "name": "Lunar Mining Consortium", "type": "ORG"},
+      "relation": {"name": "partnered with"},
+      "tail": {"id": "E0003", "name": "Tycho Lunar Research Outpost", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Lunar Mining Consortium",
+        "sent_span": "The Lunar Mining Consortium partnered with the Tycho Lunar Research Outpost in 2036 to share infrastructure and scientific data on regolith composition.",
+        "disamb": {"country": "US", "aliases": ["LMC"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2036-09-01",
+        "end": null,
+        "source": "text_infer"
+      }
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "relation": {"name": "collaborated_with"},
+      "tail": {"id": "E0011", "name": "Dr. Selene Reyes", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elara Voss",
+        "sent_span": "Dr. Elara Voss and Dr. Selene Reyes co-presented findings on quantum-neutrino correlations at the International Space Physics Symposium in Zurich on July 12, 2033.",
+        "disamb": {"country": "CH", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2033-07-12",
+        "end": "2033-07-12",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "Dr. Selene Reyes", "type": "PERSON"},
+      "relation": {"name": "affiliated_with"},
+      "tail": {"id": "E0007", "name": "The Red Shift Collective", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Selene Reyes",
+        "sent_span": "Dr. Selene Reyes joined the underground Red Shift Collective in 2037 after publishing controversial data on Ceres' ice deposits.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-01-01",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "The Red Shift Collective", "type": "ORG"},
+      "relation": {"name": "exposed"},
+      "tail": {"id": "E0005", "name": "Project Chimera", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Red Shift Collective",
+        "sent_span": "In October 2033, the Red Shift Collective leaked classified details about Project Chimera's genetic revival experiments in Iceland.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2033-10-01",
+        "end": "2033-10-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Dr. Aris Thorne", "type": "PERSON"},
+      "relation": {"name": "defected_to"},
+      "tail": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Aris Thorne",
+        "sent_span": "Dr. Aris Thorne defected from Project Chimera in December 2033 and transferred key genetic datasets to the Global Synapse Initiative.",
+        "disamb": {"country": "IS", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2033-12-01",
+        "end": "2033-12-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0012", "name": "Global Synapse Initiative", "type": "ORG"},
+      "relation": {"name": "funded_by"},
+      "tail": {"id": "E0002", "name": "NovaCore Dynamics", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Global Synapse Initiative",
+        "sent_span": "NovaCore Dynamics provided $12.5 million in funding to the Global Synapse Initiative in March 2026 for quantum-brain interface research.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2026-03-01",
+        "end": "2026-03-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0002", "name": "NovaCore Dynamics", "type": "ORG"},
+      "relation": {"name": "founded_by"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "NovaCore Dynamics",
+        "sent_span": "Dr. Elara Voss co-founded NovaCore Dynamics in Singapore on May 5, 2023, following her departure from CERN.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-05-05",
+        "end": "2023-05-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0002", "name": "NovaCore Dynamics", "type": "ORG"},
+      "relation": {"name": "appointed"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "NovaCore Dynamics",
+        "sent_span": "NovaCore Dynamics appointed Dr. Elara Voss as Chief Systems Architect on June 1, 2023, to lead fusion propulsion design.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-06-01",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0009", "name": "Chief Systems Architect", "type": "ROLE"},
+      "relation": {"name": "held_by"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Chief Systems Architect",
+        "sent_span": "Dr. Elara Voss held the position of Chief Systems Architect at NovaCore Dynamics from June 2023 through 2040.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-06-01",
+        "end": "2040-12-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0005", "name": "Project Chimera", "type": "EVENT"},
+      "relation": {"name": "led_by"},
+      "tail": {"id": "E0015", "name": "Dr. Aris Thorne", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Project Chimera",
+        "sent_span": "Dr. Aris Thorne led Project Chimera from its inception in 2028 until his defection in late 2033.",
+        "disamb": {"country": "IS", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2028-01-01",
+        "end": "2033-12-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0005", "name": "Project Chimera", "type": "EVENT"},
+      "relation": {"name": "oversaw"},
+      "tail": {"id": "E0010", "name": "Director of Xenobiology", "type": "ROLE"},
+      "context": {
+        "source": "ll
