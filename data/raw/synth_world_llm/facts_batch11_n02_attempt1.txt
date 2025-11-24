@@ -1,0 +1,71 @@
+{
+  "facts": [
+    {
+      "head": {
+        "id": "E0015",
+        "name": "Mars Ascent Vehicle Development Program",
+        "type": "ORG"
+      },
+      "relation": {
+        "name": "funded by"
+      },
+      "tail": {
+        "id": "E0002",
+        "name": "EuroMars Consortium",
+        "type": "ORG"
+      },
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Ascent Vehicle Development Program",
+        "sent_span": "The Mars Ascent Vehicle Development Program received $180 million in co-funding from the EuroMars Consortium between 2016 and 2022 to support joint propulsion system testing and integration.",
+        "disamb": {
+          "country": "EU",
+          "aliases": ["MAV Development Program"]
+        },
+        "ver": {
+          "url": null,
+          "rev_id": null
+        }
+      },
+      "time_window": {
+        "start": "2016-01-01",
+        "end": "2022-12-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {
+        "id": "E0014",
+        "name": "Dr. Priya Mehta",
+        "type": "PERSON"
+      },
+      "relation": {
+        "name": "served as lead engineer under supervision of",
+        "name": "supervised by"
+      },
+      "tail": {
+        "id": "E0001",
+        "name": "Dr. Lena Marquez",
+        "type": "PERSON"
+      },
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Priya Mehta",
+        "sent_span": "During the 2024 Mars Ascent Vehicle test at White Sands, Dr. Priya Mehta served as lead systems engineer under the technical oversight of Dr. Lena Marquez, who chaired the sample return integration review board.",
+        "disamb": {
+          "country": "US",
+          "aliases": ["Mehta, P."]
+        },
+        "ver": {
+          "url": null,
+          "rev_id": null
+        }
+      },
+      "time_window": {
+        "start": "2024-03-15",
+        "end": "2024-06-30",
+        "source": "text_infer"
+      }
+    }
+  ]
+}

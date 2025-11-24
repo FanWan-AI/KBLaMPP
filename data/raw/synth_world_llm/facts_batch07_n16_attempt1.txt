@@ -1,0 +1,276 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON"},
+      "relation": {"name": "led"},
+      "tail": {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Lena Marquez",
+        "sent_span": "Dr. Lena Marquez led field validation tests of the Mars Sample Return Lander Prototype in the Mojave Desert in 2021 as part of her role at JPL.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-05-15",
+        "end": "2021-10-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC"},
+      "relation": {"name": "developed under"},
+      "tail": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Sample Return Lander Prototype",
+        "sent_span": "The Mars Sample Return Lander Prototype was developed under the Mars Ascent Vehicle Development Program between 2016 and 2021.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2016-01-10",
+        "end": "2021-12-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "relation": {"name": "funded by"},
+      "tail": {"id": "E0002", "name": "EuroMars Consortium", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Ascent Vehicle Development Program",
+        "sent_span": "The EuroMars Consortium contributed $270 million in funding to the Mars Ascent Vehicle Development Program between 2016 and 2022.",
+        "disamb": {"country": "EU", "aliases": ["European Mars Consortium"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2016-03-01",
+        "end": "2022-11-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0005", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
+      "relation": {"name": "contributed to"},
+      "tail": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Kenji Tanaka",
+        "sent_span": "Dr. Kenji Tanaka contributed to the Mars Ascent Vehicle Development Program from 2019 to 2022 through a JAXA-NASA collaborative agreement.",
+        "disamb": {"country": "JP", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2019-04-01",
+        "end": "2022-06-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0014", "name": "Dr. Priya Mehta", "type": "PERSON"},
+      "relation": {"name": "managed"},
+      "tail": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Priya Mehta",
+        "sent_span": "Dr. Priya Mehta managed life support integration for the Mars Ascent Vehicle Development Program during the 2024 test at White Sands.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-01-10",
+        "end": "2024-05-20",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "relation": {"name": "conducted test at"},
+      "tail": {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Ascent Vehicle Development Program",
+        "sent_span": "In 2021, the Mars Ascent Vehicle Development Program conducted integrated systems testing using the Mars Sample Return Lander Prototype in Florida and the Mojave Desert.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-06-01",
+        "end": "2021-11-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0008", "name": "Dr. Amara Diallo", "type": "PERSON"},
+      "relation": {"name": "published under"},
+      "tail": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Amara Diallo",
+        "sent_span": "Dr. Amara Diallo published her radiation shielding models in 2020 under the ISS-Mars Initiative, which was coordinated by the Joint Exploration Steering Group.",
+        "disamb": {"country": "ML", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2020-03-05",
+        "end": "2020-12-10",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "relation": {"name": "oversaw"},
+      "tail": {"id": "E0010", "name": "Planetary Surface Analyst", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Joint Exploration Steering Group",
+        "sent_span": "The Joint Exploration Steering Group established standards for the Planetary Surface Analyst role in 2016 to harmonize data interpretation across international Mars missions.",
+        "disamb": {"country": "US", "aliases": ["JESG"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2016-07-20",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "Planetary Surface Analyst", "type": "ROLE"},
+      "relation": {"name": "held by"},
+      "tail": {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Planetary Surface Analyst",
+        "sent_span": "Dr. Lena Marquez served as a Planetary Surface Analyst from 2017 to 2023, interpreting orbital terrain data for NASA's Mars reconnaissance missions.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2017-02-01",
+        "end": "2023-08-31",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "Dr. Elias Nordström", "type": "PERSON"},
+      "relation": {"name": "collaborated with"},
+      "tail": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elias Nordström",
+        "sent_span": "Dr. Elias Nordström collaborated with the Joint Exploration Steering Group in 2017 to adapt Earth polar station systems for Mars simulation trials in Svalbard.",
+        "disamb": {"country": "SE", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2017-04-12",
+        "end": "2017-09-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC"},
+      "relation": {"name": "operated by"},
+      "tail": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Base Camp Alpha",
+        "sent_span": "From 2015 onward, the Joint Exploration Steering Group provided technical oversight for Mars Base Camp Alpha, used for international crew training simulations.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2015-06-01",
+        "end": "2024-11-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC"},
+      "relation": {"name": "trained"},
+      "tail": {"id": "E0014", "name": "Dr. Priya Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Base Camp Alpha",
+        "sent_span": "Dr. Priya Mehta completed a 30-day analog mission at Mars Base Camp Alpha in 2022 to simulate life support operations for future Mars missions.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2022-09-05",
+        "end": "2022-10-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0004", "name": "Ares-7 Mission", "type": "EVENT"},
+      "relation": {"name": "deployed"},
+      "tail": {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Ares-7 Mission",
+        "sent_span": "The Ares-7 Mission successfully deployed the Mars Communications Network Node-3 satellite into Martian orbit in June 2021.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-06-18",
+        "end": "2021-06-18",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC"},
+      "relation": {"name": "supports"},
+      "tail": {"id": "E0009", "name": "Mars Orbit Rendezvous Test", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Communications Network Node-3",
+        "sent_span": "Mars Communications Network Node-3 provided high-bandwidth relay support during the Mars Orbit Rendezvous Test in July 2023.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-07-10",
+        "end": "2023-07-25",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0009", "name": "Mars Orbit Rendezvous Test", "type": "EVENT"},
+      "relation": {"name": "conducted under"},
+      "tail": {"id": "E0004", "name": "Ares-7 Mission", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Orbit Rendezvous Test",
+        "sent_span": "The Mars Orbit Rendezvous Test was conducted under the broader Ares-7 Mission framework in 2023 to validate autonomous docking protocols.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-07-01",
+        "end": "2023-08-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0016", "name": "Crewed Mars Mission Readiness Review", "type": "EVENT"},
+      "relation": {"name": "attended by"},
+      "tail": {"id": "E0017", "name": "Deputy Mission Director for Mars Operations", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Crewed Mars Mission Readiness Review",
+        "sent_span": "The Deputy Mission Director for Mars Operations attended the Crewed Mars Mission Readiness Review in December 2024 to present operational readiness metrics.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2024-12-05",
+        "end": "2024-12-15",
+        "source": "text_infer"
+      }
+    }
+  ]
+}

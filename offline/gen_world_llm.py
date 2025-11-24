@@ -39,34 +39,46 @@ if str(REPO_ROOT) not in sys.path:
 
 from kblampp.utils.gpt_session import LocalGPT
 
-DATE_MIN = date(2005, 1, 1)
-DATE_MAX = date(2024, 12, 31)
+DEFAULT_DATE_MIN = date(2005, 1, 1)
+DEFAULT_DATE_MAX = date(2024, 12, 31)
+YEAR_RE = re.compile(r"(19|20)\d{2}")
 
 
 ENTITY_PROMPT_TEMPLATE = Template(
-    """
-You are designing a compact but coherent fictional knowledge base for KBLaM++.
+        """
+You are designing a compact but coherent fictional knowledge base for KBLaM++ Stage A training.
+
+Setting constraints:
+- Theme: ${world_theme}
+- Timeline window: ${date_min} through ${date_max} (inclusive). Every entity biography MUST plausibly exist within this window.
+
 Return EXACTLY one JSON object describing the entity catalog only:
 
 {
-  "entities": [
-     {"id": "E0001", "name": "...", "type": "PERSON|ORG|LOC|EVENT|ROLE|DATE", "summary": "one sentence"},
-     ... repeat until you have between ${num_entities_min} and ${num_entities_max} entries ...
-  ]
+    "entities": [
+         {"id": "E0001", "name": "...", "type": "PERSON|ORG|LOC|EVENT|ROLE|DATE", "summary": "one sentence"},
+         ... repeat until you have between ${num_entities_min} and ${num_entities_max} entries ...
+    ]
 }
 
 Strict rules:
 1. IDs increment sequentially from E0001 without gaps.
 2. Provide a balanced mix (people, orgs, locations, events, temporal markers, roles).
-3. Summaries must stay within one concise sentence with concrete details (dates, locations, motivations).
-4. Only output valid JSON. No Markdown fences, no commentary.
+3. Each summary must mention at least one concrete year inside ${date_min_year}-${date_max_year} and use grounded details (cities, missions, funding amounts, outcomes).
+4. If an entity would normally exist outside this era, describe its earlier precursor/prototype that fits within ${date_min_year}-${date_max_year}.
+5. Only output valid JSON. No Markdown fences, bullets, or commentary.
 """
 )
 
 
 FACT_PROMPT_TEMPLATE = Template(
     """
-You are extending the KB described below.  Here is the entity catalog:
+You are extending the KB described below for KBLaM++ Stage A.
+
+- Theme: ${world_theme}
+- Allowed timeline: ${date_min} through ${date_max} inclusive. Facts outside this range are discarded.
+
+Entity catalog:
 
 ${entity_catalog}
 
@@ -87,7 +99,7 @@ Return ONLY a JSON object matching the schema:
             "ver": {"url": null, "rev_id": null}
         },
         "time_window": {
-            "start": "YYYY-MM-DD",  # required and MUST be between 2005-01-01 and 2024-12-31 (inclusive)
+            "start": "YYYY-MM-DD",  # required and MUST be between ${date_min} and ${date_max}
             "end": "YYYY-MM-DD" or null,
             "source": "text_infer"
         }
@@ -96,9 +108,9 @@ Return ONLY a JSON object matching the schema:
   ]
 }
 
-Rules:
+Important compliance guardrails:
 1. Reuse ONLY the provided entity IDs (no new IDs) and keep facts consistent with summaries.
-2. Each fact must be unique, time-stamped (2005-01-01 to 2024-12-31) and human-readable.
+2. Every fact must describe activity between ${date_min} and ${date_max}. If an entity summary references a later milestone, retcon the fact to the prototype or earlier negotiation that fits within the allowed window.
 3. Include collaborations, funding chains, leadership changes, conference participation, acquisitions, etc., to ensure multi-hop reasoning.
 4. Do not repeat identical context sentences; vary phrasing and include concrete numbers/dates when possible.
 5. Never repeat the same (head, relation, tail, start-date) combination across facts.
@@ -107,6 +119,30 @@ Rules:
 )
 
 JSON_BLOCK_RE = re.compile(r"\{.*\}", re.DOTALL)
+
+
+def parse_cli_date(value: str, flag: str) -> date:
+    try:
+        return date.fromisoformat(value)
+    except ValueError as exc:  # pragma: no cover - CLI validation
+        raise ValueError(f"{flag} must be in YYYY-MM-DD format") from exc
+
+
+def years_outside_range(text: str, date_min: date, date_max: date) -> List[int]:
+    years = [int(match.group()) for match in YEAR_RE.finditer(text)]
+    return [year for year in years if year < date_min.year or year > date_max.year]
+
+
+def entity_timeframe_violations(
+    entities: List[Dict[str, Any]], date_min: date, date_max: date
+) -> List[Tuple[str, str, List[int]]]:
+    violations: List[Tuple[str, str, List[int]]] = []
+    for ent in entities:
+        summary = ent.get("summary", "")
+        outside = years_outside_range(summary, date_min, date_max)
+        if outside:
+            violations.append((ent.get("id", "?"), ent.get("name", "?"), outside))
+    return violations
 
 
 def extract_json_block(text: str) -> str:
@@ -160,10 +196,10 @@ def parse_iso_date(value: str | None) -> date | None:
         return None
 
 
-def date_within_range(day: date | None) -> bool:
+def date_within_range(day: date | None, date_min: date, date_max: date) -> bool:
     if day is None:
         return False
-    return DATE_MIN <= day <= DATE_MAX
+    return date_min <= day <= date_max
 
 
 def ensure_entity_ids(entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -172,10 +208,15 @@ def ensure_entity_ids(entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return entities
 
 
-def build_entity_catalog_prompt(num_entities: int) -> str:
+def build_entity_catalog_prompt(num_entities: int, date_min: date, date_max: date, world_theme: str) -> str:
     return ENTITY_PROMPT_TEMPLATE.substitute(
         num_entities_min=max(10, num_entities - 4),
         num_entities_max=num_entities,
+        date_min=date_min.isoformat(),
+        date_max=date_max.isoformat(),
+        date_min_year=date_min.year,
+        date_max_year=date_max.year,
+        world_theme=world_theme,
     )
 
 
@@ -187,9 +228,17 @@ def format_entity_catalog(entities: List[Dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def build_fact_prompt(entities: List[Dict[str, Any]], num_facts: int) -> str:
+def build_fact_prompt(
+    entities: List[Dict[str, Any]], num_facts: int, date_min: date, date_max: date, world_theme: str
+) -> str:
     catalog = format_entity_catalog(entities)
-    return FACT_PROMPT_TEMPLATE.substitute(entity_catalog=catalog, num_facts=num_facts)
+    return FACT_PROMPT_TEMPLATE.substitute(
+        entity_catalog=catalog,
+        num_facts=num_facts,
+        date_min=date_min.isoformat(),
+        date_max=date_max.isoformat(),
+        world_theme=world_theme,
+    )
 
 
 def validate_fact(fact: Dict[str, Any]) -> None:
@@ -240,6 +289,8 @@ def filter_and_normalize_facts(
     relation_start_index: int,
     entity_lookup: Dict[str, Dict[str, Any]],
     seen_keys: Set[Tuple[str, str, str, str]],
+    date_min: date,
+    date_max: date,
 ) -> Tuple[List[Dict[str, Any]], int, Counter]:
     accepted: List[Dict[str, Any]] = []
     relation_index = relation_start_index
@@ -254,7 +305,7 @@ def filter_and_normalize_facts(
                 raise ValueError("Relation missing descriptive name")
             start_str = fact["time_window"].get("start")
             start_date = parse_iso_date(start_str)
-            if not date_within_range(start_date):
+            if not date_within_range(start_date, date_min, date_max):
                 stats["out_of_range"] += 1
                 continue
             key = (fact["head"]["id"], relation_name.lower(), fact["tail"]["id"], start_str)
@@ -294,14 +345,26 @@ def request_json_object(
 
 
 def generate_entities(client: LocalGPT, args: argparse.Namespace, raw_dir: Path) -> List[Dict[str, Any]]:
-    prompt = build_entity_catalog_prompt(args.num_entities)
-    parsed = request_json_object(client, prompt, raw_dir, "entities", args.max_attempts)
-    entities = parsed.get("entities")
-    if not isinstance(entities, list) or not entities:
-        raise ValueError("Entity response did not contain a non-empty 'entities' list")
-    entities = ensure_entity_ids(entities)
-    log(f"entities: collected {len(entities)} entries")
-    return entities
+    prompt = build_entity_catalog_prompt(args.num_entities, args.date_min, args.date_max, args.world_theme)
+    for cycle in range(1, args.max_attempts + 1):
+        label = f"entities_cycle{cycle:02d}"
+        parsed = request_json_object(client, prompt, raw_dir, label, args.max_attempts)
+        entities = parsed.get("entities")
+        if not isinstance(entities, list) or not entities:
+            log(f"{label}: response missing 'entities' list; retrying")
+            continue
+        entities = ensure_entity_ids(entities)
+        violations = entity_timeframe_violations(entities, args.date_min, args.date_max)
+        if violations:
+            sample = ", ".join(f"{name}:{'/'.join(str(y) for y in years)}" for _, name, years in violations[:3])
+            log(
+                f"{label}: rejected entity catalog due to out-of-range years -> {sample}. "
+                "Regenerating with stronger adherence."
+            )
+            continue
+        log(f"entities: collected {len(entities)} entries")
+        return entities
+    raise RuntimeError("entities: exhausted attempts while enforcing timeline window")
 
 
 def generate_fact_batches(
@@ -324,7 +387,13 @@ def generate_fact_batches(
             remaining = total - len(facts)
             batch_size = min(current_batch_size, remaining)
             label = f"facts_batch{chunk + 1:02d}_n{batch_size:02d}"
-            prompt = build_fact_prompt(entities, batch_size)
+            prompt = build_fact_prompt(
+                entities,
+                batch_size,
+                args.date_min,
+                args.date_max,
+                args.world_theme,
+            )
             try:
                 parsed = request_json_object(client, prompt, raw_dir, label, args.max_attempts)
             except RuntimeError as err:
@@ -347,6 +416,8 @@ def generate_fact_batches(
                 relation_index,
                 entity_lookup,
                 seen_keys,
+                args.date_min,
+                args.date_max,
             )
             rejected = sum(stats.values())
             if rejected:
@@ -411,6 +482,21 @@ def main() -> None:
         default=4,
         help="Smallest batch size when auto-splitting after repeated failures",
     )
+    parser.add_argument(
+        "--date-min",
+        default=DEFAULT_DATE_MIN.isoformat(),
+        help="Earliest allowed date (YYYY-MM-DD) for entity summaries and facts",
+    )
+    parser.add_argument(
+        "--date-max",
+        default=DEFAULT_DATE_MAX.isoformat(),
+        help="Latest allowed date (YYYY-MM-DD) for entity summaries and facts",
+    )
+    parser.add_argument(
+        "--world-theme",
+        default="Applied science collaborations anchored between 2005 and 2024",
+        help="One-sentence description of the fictional setting to steer the LLM",
+    )
     parser.add_argument("--model", default=None, help="Override model name")
     parser.add_argument("--endpoint", default=None, help="Override endpoint URL")
     parser.add_argument("--temperature", type=float, default=0.6)
@@ -431,10 +517,17 @@ def main() -> None:
     if args.progress_width <= 0:
         raise ValueError("--progress_width must be positive")
 
+    args.date_min = parse_cli_date(args.date_min, "--date-min")
+    args.date_max = parse_cli_date(args.date_max, "--date-max")
+    if args.date_min >= args.date_max:
+        raise ValueError("--date-min must be earlier than --date-max")
+    args.world_theme = args.world_theme.strip() or "KBLaM++ synthetic world"
+
     raw_dir = Path(args.raw_dir)
 
     log(
-        f"Init: entities~{args.num_entities}, total facts={args.num_facts}, batch={args.facts_per_call}, model={args.model or 'auto'}"
+        f"Init: entities~{args.num_entities}, total facts={args.num_facts}, batch={args.facts_per_call}, "
+        f"years={args.date_min.year}-{args.date_max.year}, model={args.model or 'auto'}"
     )
     client = LocalGPT(
         model_name=args.model,

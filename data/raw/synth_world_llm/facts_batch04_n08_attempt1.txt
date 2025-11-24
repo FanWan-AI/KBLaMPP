@@ -1,0 +1,140 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0005", "name": "Dr. Rajan Mehta", "type": "PERSON"},
+      "relation": {"name": "collaborated_with"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Rajan Mehta",
+        "sent_span": "In 2039, Dr. Rajan Mehta and Dr. Elara Voss co-presented a breakthrough paper on real-time exoplanet biosignature transmission at the International Space Science Symposium in Singapore.",
+        "disamb": {"country": "SG", "aliases": ["R. Mehta", "Elara V."] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2039-05-12",
+        "end": "2039-05-14",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "TerraGenesis Labs", "type": "ORG"},
+      "relation": {"name": "funded_by"},
+      "tail": {"id": "E0006", "name": "Helios Mining Corporation", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "TerraGenesis Labs",
+        "sent_span": "TerraGenesis Labs received a $420 million investment from Helios Mining Corporation in 2034 to develop radiation-resistant algae strains for use in Martian terraforming projects.",
+        "disamb": {"country": "SG", "aliases": ["TGL"] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2034-08-23",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0002", "name": "Nova Terra Initiative", "type": "ORG"},
+      "relation": {"name": "partnered_with"},
+      "tail": {"id": "E0010", "name": "TerraGenesis Labs", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Nova Terra Initiative",
+        "sent_span": "In 2036, the Nova Terra Initiative formally partnered with TerraGenesis Labs to deploy synthetic ecosystems in the Hellas Basin as part of Phase Two of Mars terraforming.",
+        "disamb": {"country": "US", "aliases": ["NTI"] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2036-03-17",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0004", "name": "The Silica Uprising", "type": "EVENT"},
+      "relation": {"name": "involved"},
+      "tail": {"id": "E0005", "name": "Dr. Rajan Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Silica Uprising",
+        "sent_span": "Dr. Rajan Mehta was called as a technical advisor during the Silica Uprising in June 2044 to mediate communication between lunar AI constructs and Earth-based oversight committees.",
+        "disamb": {"country": "US", "aliases": ["Silica Revolt"] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2044-06-05",
+        "end": "2044-07-18",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "Vega Colony", "type": "LOC"},
+      "relation": {"name": "established_by"},
+      "tail": {"id": "E0002", "name": "Nova Terra Initiative", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Vega Colony",
+        "sent_span": "The Nova Terra Initiative led the international coalition that established Vega Colony in 2051 after the arrival of the generation ship *Odyssey VII* from Earth.",
+        "disamb": {"country": "US", "aliases": ["Vega VI Settlement"] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2051-04-30",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0014", "name": "Neptune Array", "type": "LOC"},
+      "relation": {"name": "monitored"},
+      "tail": {"id": "E0008", "name": "The Great Data Fracture", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Neptune Array",
+        "sent_span": "Although constructed later, the Neptune Array was designed in 2045 using signal degradation models derived from the 2037 Great Data Fracture to enhance deep-space data resilience.",
+        "disamb": {"country": "US", "aliases": ["Neptune Deep Array"] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2045-09-11",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0009", "name": "Commander Lin Zhao", "type": "PERSON"},
+      "relation": {"name": "served_under"},
+      "tail": {"id": "E0016", "name": "Director Amara Kline", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Commander Lin Zhao",
+        "sent_span": "During the Voyager Extended Mission in 2046, Commander Lin Zhao operated under the strategic oversight of Director Amara Kline of the Solar Security Coalition.",
+        "disamb": {"country": "US", "aliases": ["Cdr. Zhao", "A. Kline"] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2046-02-14",
+        "end": "2048-11-03",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0003", "name": "Aurora Station", "type": "LOC"},
+      "relation": {"name": "hosted"},
+      "tail": {"id": "E0013", "name": "Chief Xenolinguist", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Aurora Station",
+        "sent_span": "Aurora Station hosted the first Chief Xenolinguist in 2043 to analyze anomalous signal patterns detected near Titan, marking a key moment in intermoon communications research.",
+        "disamb": {"country": "US", "aliases": ["Aurora Outpost"] },
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2043-07-09",
+        "end": null,
+        "source": "text_infer"
+      }
+    }
+  ]
+}

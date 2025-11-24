@@ -1,0 +1,140 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "relation": {"name": "collaborated_with"},
+      "tail": {"id": "E0005", "name": "Dr. Rajan Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elara Voss",
+        "sent_span": "In 2038, Dr. Elara Voss collaborated with Dr. Rajan Mehta to integrate quantum communication relays into deep-space exobiology probes deployed near Europa.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2038-03-15",
+        "end": "2038-12-20",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0002", "name": "Nova Terra Initiative", "type": "ORG"},
+      "relation": {"name": "funded_by"},
+      "tail": {"id": "E0010", "name": "TerraGenesis Labs", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Nova Terra Initiative",
+        "sent_span": "TerraGenesis Labs provided $420 million in seed funding to the Nova Terra Initiative in 2036 to develop cold-adapted algae strains for Martian soil conditioning.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2036-07-01",
+        "end": "2036-07-01",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0006", "name": "Helios Mining Corporation", "type": "ORG"},
+      "relation": {"name": "supplied_resources_to"},
+      "tail": {"id": "E0002", "name": "Nova Terra Initiative", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Helios Mining Corporation",
+        "sent_span": "Helios Mining Corporation supplied iridium and titanium alloys from Ceres to the Nova Terra Initiative between 2037 and 2040 for constructing atmospheric processors on Mars.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-01-10",
+        "end": "2040-11-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0009", "name": "Commander Lin Zhao", "type": "PERSON"},
+      "relation": {"name": "appointed_by"},
+      "tail": {"id": "E0016", "name": "Director Amara Kline", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Commander Lin Zhao",
+        "sent_span": "In 2045, Director Amara Kline appointed Commander Lin Zhao to lead the Voyager Extended Mission due to her expertise in long-duration life support systems.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2045-02-28",
+        "end": "2045-02-28",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0013", "name": "Chief Xenolinguist", "type": "ROLE"},
+      "relation": {"name": "held_by"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Chief Xenolinguist",
+        "sent_span": "Dr. Elara Voss was appointed Chief Xenolinguist in 2043 to analyze complex signal patterns detected near Titan believed to be of non-human origin.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2043-09-12",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0014", "name": "Neptune Array", "type": "LOC"},
+      "relation": {"name": "constructed_under"},
+      "tail": {"id": "E0005", "name": "Dr. Rajan Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Neptune Array",
+        "sent_span": "The Neptune Array was constructed under the technical oversight of Dr. Rajan Mehta between 2043 and 2045 to enable real-time quantum-linked observations across the outer solar system.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2043-04-18",
+        "end": "2045-10-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0008", "name": "The Great Data Fracture", "type": "EVENT"},
+      "relation": {"name": "preceded"},
+      "tail": {"id": "E0018", "name": "Year of Silent Skies", "type": "DATE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Great Data Fracture",
+        "sent_span": "The Great Data Fracture of 2037 directly preceded the Year of Silent Skies in 2038, as fragmented networks were less resilient to the solar superstorm that disabled global satellites.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-11-03",
+        "end": "2038-01-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "Vega Colony", "type": "LOC"},
+      "relation": {"name": "established_using"},
+      "tail": {"id": "E0017", "name": "Deep Cycle Protocol", "type": "ROLE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Vega Colony",
+        "sent_span": "The Vega Colony was established in 2051 using the Deep Cycle Protocol to maintain crew viability during the 27-year cryo-journey from Earth.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2024-06-10",
+        "end": "2024-06-10",
+        "source": "text_infer"
+      }
+    }
+  ]
+}

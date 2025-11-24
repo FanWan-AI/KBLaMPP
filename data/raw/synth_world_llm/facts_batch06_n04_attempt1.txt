@@ -1,0 +1,72 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0005", "name": "Dr. Rajan Mehta", "type": "PERSON"},
+      "relation": {"name": "collaborated_with"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Rajan Mehta",
+        "sent_span": "In 2039, Dr. Rajan Mehta and Dr. Elara Voss co-presented a joint paper at the International Astrobiology Symposium on integrating quantum communication with deep-space life-detection missions.",
+        "disamb": {"country": "US", "aliases": ["Rajan Mehta"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2039-06-15",
+        "end": "2039-06-20",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "TerraGenesis Labs", "type": "ORG"},
+      "relation": {"name": "funded_by"},
+      "tail": {"id": "E0006", "name": "Helios Mining Corporation", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "TerraGenesis Labs",
+        "sent_span": "TerraGenesis Labs received a $420 million investment from Helios Mining Corporation in 2036 to develop self-sustaining biospheres for use in asteroid-based habitats.",
+        "disamb": {"country": "SG", "aliases": ["TerraGenesis"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2036-03-10",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0008", "name": "The Great Data Fracture", "type": "EVENT"},
+      "relation": {"name": "preceded"},
+      "tail": {"id": "E0018", "name": "Year of Silent Skies", "type": "DATE"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "The Great Data Fracture",
+        "sent_span": "The Great Data Fracture of 2037 destabilized global network infrastructure, leaving satellite defense systems vulnerable and contributing to the prolonged outage during the Year of Silent Skies in 2038.",
+        "disamb": {"country": "US", "aliases": ["Data Fracture 2037"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-11-05",
+        "end": "2038-01-17",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0016", "name": "Director Amara Kline", "type": "PERSON"},
+      "relation": {"name": "negotiated_under"},
+      "tail": {"id": "E0012", "name": "The Jovian Accords", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Director Amara Kline",
+        "sent_span": "Director Amara Kline served as chief negotiator during the 2041 diplomatic summit that produced The Jovian Accords, leveraging intelligence from Aurora Station to secure peaceful resource-sharing agreements.",
+        "disamb": {"country": "US", "aliases": ["Amara Kline"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2041-05-01",
+        "end": "2041-09-30",
+        "source": "text_infer"
+      }
+    }
+  ]
+}

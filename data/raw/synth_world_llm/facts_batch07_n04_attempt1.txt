@@ -1,0 +1,72 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0005", "name": "Dr. Rajan Mehta", "type": "PERSON"},
+      "relation": {"name": "collaborated_with"},
+      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Rajan Mehta",
+        "sent_span": "In 2039, Dr. Rajan Mehta and Dr. Elara Voss co-led a joint mission simulation at Orbital Datum Zero to test real-time communication between Earth and a Europa-bound probe using quantum entanglement.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2039-04-12",
+        "end": "2039-06-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "TerraGenesis Labs", "type": "ORG"},
+      "relation": {"name": "funded_by"},
+      "tail": {"id": "E0006", "name": "Helios Mining Corporation", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "TerraGenesis Labs",
+        "sent_span": "TerraGenesis Labs received a $420 million investment from Helios Mining Corporation in 2036 to develop radiation-resistant algae strains for use in Mars terraforming under the Nova Terra Initiative.",
+        "disamb": {"country": "SG", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2036-08-17",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0016", "name": "Director Amara Kline", "type": "PERSON"},
+      "relation": {"name": "negotiated_treaty"},
+      "tail": {"id": "E0012", "name": "The Jovian Accords", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Director Amara Kline",
+        "sent_span": "Director Amara Kline served as chief negotiator during the 2041 diplomatic summit that produced The Jovian Accords, establishing peaceful resource-sharing protocols among twelve spacefaring nations operating near Jupiter.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2041-03-01",
+        "end": "2041-05-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0014", "name": "Neptune Array", "type": "LOC"},
+      "relation": {"name": "monitored_event"},
+      "tail": {"id": "E0008", "name": "The Great Data Fracture", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Neptune Array",
+        "sent_span": "Although completed in 2045, retrospective analysis by the Neptune Array in 2046 confirmed anomalous electromagnetic pulses from the 2037 Great Data Fracture that had propagated into deep space.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2037-09-22",
+        "end": "2046-01-10",
+        "source": "text_infer"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+    "entities": [
+        {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON", "summary": "A planetary geologist who led NASA's Mars Sample Return analysis team in 2023 after joining JPL in 2007."},
+        {"id": "E0002", "name": "EuroMars Consortium", "type": "ORG", "summary": "A European Space Agency-led alliance formed in 2012 with $900 million in initial funding to support robotic Mars exploration through 2024."},
+        {"id": "E0003", "name": "Mars Transit Habitat Prototype", "type": "LOC", "summary": "A pressurized module tested at Johnson Space Center in 2018 to simulate long-duration crewed missions to Mars."},
+        {"id": "E0004", "name": "Ares-7 Mission", "type": "EVENT", "summary": "A joint NASA-ESA orbital insertion of a communications satellite around Mars in 2021 to boost data relay capacity."},
+        {"id": "E0005", "name": "Dr. Kenji Tanaka", "type": "PERSON", "summary": "A Japanese aerospace engineer who contributed to the Mars Ascent Vehicle design during the 2019-2022 JAXA-NASA collaboration phase."},
+        {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC", "summary": "A simulated Mars surface habitat operated in the Utah desert from 2010 to 2024 by the International Mars Society for crew training."},
+        {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG", "summary": "An interagency body established in 2015 by the U.S., Germany, Japan, and Canada to coordinate Mars mission standards and payloads."},
+        {"id": "E0008", "name": "Dr. Amara Diallo", "type": "PERSON", "summary": "A Malian-born astrophysicist who developed radiation shielding models for Mars transits, published in 2020 under the ISS-Mars Initiative."},
+        {"id": "E0009", "name": "Mars Orbit Rendezvous Test", "type": "EVENT", "summary": "A successful autonomous docking simulation conducted in Martian orbit by robotic craft in 2023 under the Ares program."},
+        {"id": "E0010", "name": "Planetary Surface Analyst", "type": "ROLE", "summary": "A specialized role defined in 2016 by NASA for scientists interpreting high-resolution Mars terrain data from orbital missions."},
+        {"id": "E0011", "name": "Dr. Elias Nordström", "type": "PERSON", "summary": "A Swedish climate modeler who adapted Earth polar station systems for Mars use in a 2017 Svalbard field trial."},
+        {"id": "E0012", "name": "2022 Mars Launch Window", "type": "DATE", "summary": "The six-week period from July 15 to August 25, 2022, when Earth and Mars alignment enabled optimal interplanetary transit."},
+        {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC", "summary": "A relay satellite placed in Mars orbit in 2019 to expand bandwidth for rovers and future crewed missions."},
+        {"id": "E0014", "name": "Dr. Priya Mehta", "type": "PERSON", "summary": "An Indian-American systems engineer who managed life support integration for the 2024 Mars Ascent Vehicle test at White Sands."},
+        {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG", "summary": "A multinational engineering initiative funded jointly by NASA and ESA starting in 2016 to design sample return launch systems."},
+        {"id": "E0016", "name": "Crewed Mars Mission Readiness Review", "type": "EVENT", "summary": "A formal assessment conducted in December 2024 to evaluate the technological and medical readiness for human Mars expeditions."},
+        {"id": "E0017", "name": "Deputy Mission Director for Mars Operations", "type": "ROLE", "summary": "A leadership role established in 2020 at NASA Headquarters to oversee day-to-day planning for Mars surface missions."},
+        {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC", "summary": "A full-scale test version of the Mars lander built at Kennedy Space Center and validated in 2021 using Mojave Desert trials."}
+    ]
+}

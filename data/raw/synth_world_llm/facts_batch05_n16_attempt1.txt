@@ -1,274 +1,274 @@
 {
   "facts": [
     {
-      "head": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
-      "relation": {"name": "collaborated_with"},
-      "tail": {"id": "E0018", "name": "Dr. Amara Singh", "type": "PERSON"},
+      "head": {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON"},
+      "relation": {"name": "led analysis for"},
+      "tail": {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC"},
       "context": {
         "source": "llm_synth",
-        "page_title": "Dr. Elara Voss",
-        "sent_span": "In 2043, Dr. Elara Voss collaborated with Dr. Amara Singh to implement quantum communication protocols for real-time data transmission from Europa's subsurface probes.",
+        "page_title": "Dr. Lena Marquez",
+        "sent_span": "Dr. Lena Marquez led the scientific analysis team evaluating the Mars Sample Return Lander Prototype at Kennedy Space Center in 2021.",
         "disamb": {"country": "US", "aliases": []},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2043-01-01",
-        "end": "2043-12-31",
+        "start": "2021-05-10",
+        "end": "2021-11-30",
         "source": "text_infer"
       }
     },
     {
-      "head": {"id": "E0002", "name": "Nova Dynamics", "type": "ORG"},
-      "relation": {"name": "funded"},
-      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
+      "head": {"id": "E0002", "name": "EuroMars Consortium", "type": "ORG"},
+      "relation": {"name": "funded development of"},
+      "tail": {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC"},
       "context": {
         "source": "llm_synth",
-        "page_title": "Nova Dynamics",
-        "sent_span": "Nova Dynamics provided $12 million in funding to Dr. Elara Voss in 2041 to support instrumentation development for the Europa Ocean Expedition.",
-        "disamb": {"country": "SG", "aliases": []},
+        "page_title": "EuroMars Consortium",
+        "sent_span": "The EuroMars Consortium provided €270 million in funding between 2013 and 2018 that supported the development of Mars Communications Network Node-3.",
+        "disamb": {"country": "EU", "aliases": ["European Mars Consortium"]},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2041-03-15",
-        "end": null,
+        "start": "2013-01-15",
+        "end": "2018-09-22",
         "source": "text_infer"
       }
     },
     {
-      "head": {"id": "E0003", "name": "Tycho Lunar Research Outpost", "type": "LOC"},
-      "relation": {"name": "operated_by"},
-      "tail": {"id": "E0017", "name": "Lunar Mining Consortium", "type": "ORG"},
+      "head": {"id": "E0003", "name": "Mars Transit Habitat Prototype", "type": "LOC"},
+      "relation": {"name": "used in training for"},
+      "tail": {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC"},
       "context": {
         "source": "llm_synth",
-        "page_title": "Tycho Lunar Research Outpost",
-        "sent_span": "The Lunar Mining Consortium was granted operational oversight of the Tycho Lunar Research Outpost in 2037 to coordinate mineral extraction and scientific research.",
+        "page_title": "Mars Transit Habitat Prototype",
+        "sent_span": "The Mars Transit Habitat Prototype at Johnson Space Center was used in 2019 to simulate transit phases later integrated into Mars Base Camp Alpha training scenarios in Utah.",
         "disamb": {"country": "US", "aliases": []},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2037-06-01",
-        "end": null,
+        "start": "2019-03-17",
+        "end": "2019-08-05",
         "source": "text_infer"
       }
     },
     {
-      "head": {"id": "E0004", "name": "The Great Coral Revival", "type": "EVENT"},
-      "relation": {"name": "led_by"},
-      "tail": {"id": "E0010", "name": "Dr. Mireya Cortez", "type": "PERSON"},
+      "head": {"id": "E0004", "name": "Ares-7 Mission", "type": "EVENT"},
+      "relation": {"name": "deployed"},
+      "tail": {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC"},
       "context": {
         "source": "llm_synth",
-        "page_title": "The Great Coral Revival",
-        "sent_span": "Dr. Mireya Cortez led the biological engineering team during The Great Coral Revival from 2030 to 2040, designing symbiotic algae strains to enhance coral resilience.",
+        "page_title": "Ares-7 Mission",
+        "sent_span": "The Ares-7 Mission successfully deployed Mars Communications Network Node-3 into orbit around Mars in November 2021.",
         "disamb": {"country": "US", "aliases": []},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2030-01-01",
-        "end": "2040-12-31",
+        "start": "2021-11-03",
+        "end": "2021-11-03",
         "source": "text_infer"
       }
     },
     {
-      "head": {"id": "E0005", "name": "Project Aether", "type": "EVENT"},
-      "relation": {"name": "funded_by"},
-      "tail": {"id": "E0007", "name": "Global Climate Accord of 2027", "type": "EVENT"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "Project Aether",
-        "sent_span": "Project Aether was funded through emergency climate innovation grants established by the Global Climate Accord of 2027, with $800 million allocated in 2032.",
-        "disamb": {"country": "US", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2032-09-10",
-        "end": null,
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0006", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
-      "relation": {"name": "advised"},
-      "tail": {"id": "E0007", "name": "Global Climate Accord of 2027", "type": "EVENT"},
+      "head": {"id": "E0005", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
+      "relation": {"name": "designed component for"},
+      "tail": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
       "context": {
         "source": "llm_synth",
         "page_title": "Dr. Kenji Tanaka",
-        "sent_span": "Dr. Kenji Tanaka served as a scientific advisor during the drafting of the Global Climate Accord of 2027, presenting simulations on long-term atmospheric stabilization.",
-        "disamb": {"country": "US", "aliases": []},
+        "sent_span": "Dr. Kenji Tanaka designed the ignition control module for the Mars Ascent Vehicle Development Program between January 2019 and June 2021.",
+        "disamb": {"country": "JP", "aliases": []},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2026-05-12",
-        "end": "2027-11-30",
+        "start": "2019-01-10",
+        "end": "2021-06-30",
         "source": "text_infer"
       }
     },
     {
-      "head": {"id": "E0008", "name": "Aurora Borealis Observatory", "type": "LOC"},
-      "relation": {"name": "monitored"},
-      "tail": {"id": "E0013", "name": "The Solar Flare of 2039", "type": "EVENT"},
+      "head": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "relation": {"name": "established standards for"},
+      "tail": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
       "context": {
         "source": "llm_synth",
-        "page_title": "Aurora Borealis Observatory",
-        "sent_span": "The Aurora Borealis Observatory recorded the peak intensity of The Solar Flare of 2039 on September 8, 2039, providing critical early warnings to satellite operators.",
-        "disamb": {"country": "US", "aliases": []},
+        "page_title": "Joint Exploration Steering Group",
+        "sent_span": "The Joint Exploration Steering Group established interoperability standards in 2017 that were adopted by the Mars Ascent Vehicle Development Program.",
+        "disamb": {"country": "US", "aliases": ["JESG"]},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2039-09-08",
-        "end": "2039-09-08",
+        "start": "2017-04-22",
+        "end": "2017-04-22",
         "source": "text_infer"
       }
     },
     {
-      "head": {"id": "E0009", "name": "Chief Sustainability Officer", "type": "ROLE"},
-      "relation": {"name": "held_by"},
-      "tail": {"id": "E0010", "name": "Dr. Mireya Cortez", "type": "PERSON"},
+      "head": {"id": "E0008", "name": "Dr. Amara Diallo", "type": "PERSON"},
+      "relation": {"name": "published research under"},
+      "tail": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
       "context": {
         "source": "llm_synth",
-        "page_title": "Chief Sustainability Officer",
-        "sent_span": "Dr. Mireya Cortez was appointed Chief Sustainability Officer at TerraForm Inc. in 2035, overseeing the integration of drought-resistant crops into global supply chains.",
+        "page_title": "Dr. Amara Diallo",
+        "sent_span": "Dr. Amara Diallo published her radiation shielding models in 2020 under the auspices of the Joint Exploration Steering Group's ISS-Mars Initiative.",
+        "disamb": {"country": "ML", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2020-06-15",
+        "end": "2020-06-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0009", "name": "Mars Orbit Rendezvous Test", "type": "EVENT"},
+      "relation": {"name": "validated technology for"},
+      "tail": {"id": "E0004", "name": "Ares-7 Mission", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Orbit Rendezvous Test",
+        "sent_span": "The Mars Orbit Rendezvous Test in 2023 validated autonomous docking protocols that were originally developed for the Ares-7 Mission infrastructure.",
         "disamb": {"country": "US", "aliases": []},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2035-04-22",
+        "start": "2023-08-14",
+        "end": "2023-08-14",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "Planetary Surface Analyst", "type": "ROLE"},
+      "relation": {"name": "staffed by"},
+      "tail": {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Planetary Surface Analyst",
+        "sent_span": "Dr. Lena Marquez served as a Planetary Surface Analyst from 2016 to 2022, interpreting high-resolution terrain data from Mars orbiters.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2016-02-01",
+        "end": "2022-12-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "Dr. Elias Nordström", "type": "PERSON"},
+      "relation": {"name": "conducted field trial at"},
+      "tail": {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elias Nordström",
+        "sent_span": "Dr. Elias Nordström adapted polar life support systems in a 2017 Svalbard trial that were later tested at Mars Base Camp Alpha in 2018.",
+        "disamb": {"country": "SE", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2018-05-11",
+        "end": "2018-06-20",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0012", "name": "2022 Mars Launch Window", "type": "DATE"},
+      "relation": {"name": "scheduled launch for"},
+      "tail": {"id": "E0014", "name": "Dr. Priya Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "2022 Mars Launch Window",
+        "sent_span": "Dr. Priya Mehta managed the final systems integration for the Mars Ascent Vehicle test ahead of the 2022 Mars Launch Window from July 15 to August 25, 2022.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2022-07-15",
+        "end": "2022-08-25",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0014", "name": "Dr. Priya Mehta", "type": "PERSON"},
+      "relation": {"name": "managed test of"},
+      "tail": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Priya Mehta",
+        "sent_span": "Dr. Priya Mehta managed the full-scale test of the Mars Ascent Vehicle in April 2024 under the Mars Ascent Vehicle Development Program at White Sands.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2024-04-03",
+        "end": "2024-04-12",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "relation": {"name": "collaborated with"},
+      "tail": {"id": "E0005", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Ascent Vehicle Development Program",
+        "sent_span": "The Mars Ascent Vehicle Development Program collaborated with Dr. Kenji Tanaka from JAXA between 2019 and 2022 on propulsion subsystem design.",
+        "disamb": {"country": "US", "aliases": ["MAVDP"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2019-03-01",
+        "end": "2022-02-28",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0016", "name": "Crewed Mars Mission Readiness Review", "type": "EVENT"},
+      "relation": {"name": "evaluated"},
+      "tail": {"id": "E0003", "name": "Mars Transit Habitat Prototype", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Crewed Mars Mission Readiness Review",
+        "sent_span": "The Crewed Mars Mission Readiness Review in December 2024 evaluated the Mars Transit Habitat Prototype's long-duration life support performance.",
+        "disamb": {"country": "US", "aliases": ["CMMRR"]},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2024-12-01",
+        "end": "2024-12-15",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0017", "name": "Deputy Mission Director for Mars Operations", "type": "ROLE"},
+      "relation": {"name": "held by"},
+      "tail": {"id": "E0008", "name": "Dr. Amara Diallo", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Deputy Mission Director for Mars Operations",
+        "sent_span": "Dr. Amara Diallo was appointed Deputy Mission Director for Mars Operations in October 2020, overseeing daily coordination of Mars surface mission planning.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2020-10-05",
         "end": null,
         "source": "text_infer"
       }
     },
     {
-      "head": {"id": "E0011", "name": "TerraForm Inc.", "type": "ORG"},
-      "relation": {"name": "partnered_with"},
-      "tail": {"id": "E0002", "name": "Nova Dynamics", "type": "ORG"},
+      "head": {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC"},
+      "relation": {"name": "trained personnel for"},
+      "tail": {"id": "E0010", "name": "Planetary Surface Analyst", "type": "ROLE"},
       "context": {
         "source": "llm_synth",
-        "page_title": "TerraForm Inc.",
-        "sent_span": "TerraForm Inc. partnered with Nova Dynamics in 2039 to develop self-sustaining bioreactors for use in fusion-powered Martian habitats.",
-        "disamb": {"country": "SG", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2039-07-19",
-        "end": null,
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0012", "name": "Mars Transit Hub", "type": "LOC"},
-      "relation": {"name": "supplied_by"},
-      "tail": {"id": "E0011", "name": "TerraForm Inc.", "type": "ORG"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "Mars Transit Hub",
-        "sent_span": "TerraForm Inc. began supplying engineered soil microbiomes to the Mars Transit Hub in 2041 to support hydroponic farms for long-duration crews.",
+        "page_title": "Mars Base Camp Alpha",
+        "sent_span": "Mars Base Camp Alpha conducted specialized terrain analysis drills between 2016 and 2023 to train personnel for the Planetary Surface Analyst role.",
         "disamb": {"country": "US", "aliases": []},
         "ver": {"url": null, "rev_id": null}
       },
       "time_window": {
-        "start": "2041-11-03",
-        "end": null,
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0013", "name": "The Solar Flare of 2039", "type": "EVENT"},
-      "relation": {"name": "impacted"},
-      "tail": {"id": "E0016", "name": "The Year of Silent Networks", "type": "DATE"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "The Solar Flare of 2039",
-        "sent_span": "The Solar Flare of 2039 directly triggered The Year of Silent Networks, causing cascading internet outages that persisted through late 2039.",
-        "disamb": {"country": "US", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2039-09-01",
-        "end": "2039-12-31",
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0014", "name": "Director of Extraterrestrial Affairs", "type": "ROLE"},
-      "relation": {"name": "first_held_by"},
-      "tail": {"id": "E0001", "name": "Dr. Elara Voss", "type": "PERSON"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "Director of Extraterrestrial Affairs",
-        "sent_span": "Dr. Elara Voss was appointed the first Director of Extraterrestrial Affairs by the United Nations in 2041, following her success in leading the Europa mission.",
-        "disamb": {"country": "US", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2041-12-10",
-        "end": null,
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0015", "name": "Arctic Data Vault", "type": "LOC"},
-      "relation": {"name": "preserved_data_from"},
-      "tail": {"id": "E0016", "name": "The Year of Silent Networks", "type": "DATE"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "Arctic Data Vault",
-        "sent_span": "The Arctic Data Vault preserved encrypted backups of global network configurations lost during The Year of Silent Networks, enabling restoration by 2040.",
-        "disamb": {"country": "US", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2039-10-01",
-        "end": "2040-03-15",
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0006", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
-      "relation": {"name": "consulted_for"},
-      "tail": {"id": "E0012", "name": "Mars Transit Hub", "type": "LOC"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "Dr. Kenji Tanaka",
-        "sent_span": "Dr. Kenji Tanaka consulted for the Mars Transit Hub design team in 2038, advising on closed-loop environmental systems based on his Mars simulation work.",
-        "disamb": {"country": "US", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2038-02-20",
-        "end": "2038-08-30",
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0017", "name": "Lunar Mining Consortium", "type": "ORG"},
-      "relation": {"name": "supplied_helium-3_to"},
-      "tail": {"id": "E0002", "name": "Nova Dynamics", "type": "ORG"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "Lunar Mining Consortium",
-        "sent_span": "The Lunar Mining Consortium delivered its first commercial shipment of helium-3 to Nova Dynamics in 2036, enabling the development of fusion-powered probes.",
-        "disamb": {"country": "US", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2036-05-17",
-        "end": null,
-        "source": "text_infer"
-      }
-    },
-    {
-      "head": {"id": "E0018", "name": "Dr. Amara Singh", "type": "PERSON"},
-      "relation": {"name": "affiliated_with"},
-      "tail": {"id": "E0008", "name": "Aurora Borealis Observatory", "type": "LOC"},
-      "context": {
-        "source": "llm_synth",
-        "page_title": "Dr. Amara Singh",
-        "sent_span": "Dr. Amara Singh conducted quantum interference experiments at the Aurora Borealis Observatory in 2042 to test signal stability during solar storms.",
-        "disamb": {"country": "US", "aliases": []},
-        "ver": {"url": null, "rev_id": null}
-      },
-      "time_window": {
-        "start": "2042-03-01",
-        "end": "2042-12-15",
+        "start": "2016-03-10",
+        "end": "2023-11-20",
         "source": "text_infer"
       }
     }

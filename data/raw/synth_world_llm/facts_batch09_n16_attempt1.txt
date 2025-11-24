@@ -1,0 +1,276 @@
+{
+  "facts": [
+    {
+      "head": {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON"},
+      "relation": {"name": "led analysis for"},
+      "tail": {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Lena Marquez",
+        "sent_span": "Dr. Lena Marquez led the geological analysis team evaluating the Mars Sample Return Lander Prototype during its 2021 Mojave Desert trials.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-05-10",
+        "end": "2021-11-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC"},
+      "relation": {"name": "tested during"},
+      "tail": {"id": "E0004", "name": "Ares-7 Mission", "type": "EVENT"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Sample Return Lander Prototype",
+        "sent_span": "Although not launched, the Mars Sample Return Lander Prototype's communication systems were stress-tested using simulated Ares-7 Mission signal delays in 2021.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-06-15",
+        "end": "2021-08-20",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0004", "name": "Ares-7 Mission", "type": "EVENT"},
+      "relation": {"name": "deployed"},
+      "tail": {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Ares-7 Mission",
+        "sent_span": "The Ares-7 Mission successfully deployed Mars Communications Network Node-3 into orbit around Mars in October 2021.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-10-05",
+        "end": "2021-10-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC"},
+      "relation": {"name": "funded by"},
+      "tail": {"id": "E0002", "name": "EuroMars Consortium", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Communications Network Node-3",
+        "sent_span": "EuroMars Consortium provided 40% of the funding for Mars Communications Network Node-3, approved in 2018 and launched in 2019.",
+        "disamb": {"country": "EU", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2018-03-12",
+        "end": "2019-06-18",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0002", "name": "EuroMars Consortium", "type": "ORG"},
+      "relation": {"name": "collaborated with"},
+      "tail": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "EuroMars Consortium",
+        "sent_span": "EuroMars Consortium formally joined the Joint Exploration Steering Group in 2016 to align European Mars relay standards with international partners.",
+        "disamb": {"country": "EU", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2016-04-22",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "relation": {"name": "appointed"},
+      "tail": {"id": "E0008", "name": "Dr. Amara Diallo", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Joint Exploration Steering Group",
+        "sent_span": "In 2020, the Joint Exploration Steering Group appointed Dr. Amara Diallo to lead the radiation shielding subcommittee for crewed Mars transits.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2020-01-15",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0008", "name": "Dr. Amara Diallo", "type": "PERSON"},
+      "relation": {"name": "developed models used in"},
+      "tail": {"id": "E0003", "name": "Mars Transit Habitat Prototype", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Amara Diallo",
+        "sent_span": "Dr. Amara Diallo's 2020 radiation shielding models were integrated into the Mars Transit Habitat Prototype during its 2022 upgrade cycle at Johnson Space Center.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2022-03-01",
+        "end": "2022-09-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0003", "name": "Mars Transit Habitat Prototype", "type": "LOC"},
+      "relation": {"name": "operated by"},
+      "tail": {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Transit Habitat Prototype",
+        "sent_span": "Dr. Lena Marquez served as a rotating science lead in the Mars Transit Habitat Prototype during a two-week simulation in October 2019.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2019-10-05",
+        "end": "2019-10-19",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0005", "name": "Dr. Kenji Tanaka", "type": "PERSON"},
+      "relation": {"name": "contributed to"},
+      "tail": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Kenji Tanaka",
+        "sent_span": "Dr. Kenji Tanaka worked under the Mars Ascent Vehicle Development Program from 2019 to 2022, focusing on ignition stability in low-pressure environments.",
+        "disamb": {"country": "JP", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2019-01-10",
+        "end": "2022-03-17",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0015", "name": "Mars Ascent Vehicle Development Program", "type": "ORG"},
+      "relation": {"name": "managed by"},
+      "tail": {"id": "E0014", "name": "Dr. Priya Mehta", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Ascent Vehicle Development Program",
+        "sent_span": "Dr. Priya Mehta was appointed systems manager for the Mars Ascent Vehicle Development Program in 2021, overseeing integration tests through 2024.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-07-01",
+        "end": "2024-11-30",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0014", "name": "Dr. Priya Mehta", "type": "PERSON"},
+      "relation": {"name": "conducted test at"},
+      "tail": {"id": "E0018", "name": "Mars Sample Return Lander Prototype", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Priya Mehta",
+        "sent_span": "Dr. Priya Mehta led the life support integration test at the Mars Sample Return Lander Prototype site in White Sands during August 2024.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2024-08-03",
+        "end": "2024-08-27",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0011", "name": "Dr. Elias Nordström", "type": "PERSON"},
+      "relation": {"name": "advised on"},
+      "tail": {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Dr. Elias Nordström",
+        "sent_span": "Dr. Elias Nordström advised the Mars Base Camp Alpha team in 2018 on thermal regulation systems based on his Svalbard polar station research.",
+        "disamb": {"country": "SE", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2018-02-14",
+        "end": "2018-04-29",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0006", "name": "Mars Base Camp Alpha", "type": "LOC"},
+      "relation": {"name": "used for training by"},
+      "tail": {"id": "E0007", "name": "Joint Exploration Steering Group", "type": "ORG"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Base Camp Alpha",
+        "sent_span": "The Joint Exploration Steering Group utilized Mars Base Camp Alpha in 2019 for a multinational crew training exercise focused on surface operations coordination.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2019-09-10",
+        "end": "2019-10-05",
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0010", "name": "Planetary Surface Analyst", "type": "ROLE"},
+      "relation": {"name": "held by"},
+      "tail": {"id": "E0001", "name": "Dr. Lena Marquez", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Planetary Surface Analyst",
+        "sent_span": "Dr. Lena Marquez was formally designated a Planetary Surface Analyst in 2017 to interpret high-resolution imagery from Mars orbiters for landing site selection.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2017-06-23",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0017", "name": "Deputy Mission Director for Mars Operations", "type": "ROLE"},
+      "relation": {"name": "held by"},
+      "tail": {"id": "E0008", "name": "Dr. Amara Diallo", "type": "PERSON"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Deputy Mission Director for Mars Operations",
+        "sent_span": "Dr. Amara Diallo was named Deputy Mission Director for Mars Operations at NASA Headquarters in March 2021, overseeing daily mission planning.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2021-03-15",
+        "end": null,
+        "source": "text_infer"
+      }
+    },
+    {
+      "head": {"id": "E0009", "name": "Mars Orbit Rendezvous Test", "type": "EVENT"},
+      "relation": {"name": "supported by"},
+      "tail": {"id": "E0013", "name": "Mars Communications Network Node-3", "type": "LOC"},
+      "context": {
+        "source": "llm_synth",
+        "page_title": "Mars Orbit Rendezvous Test",
+        "sent_span": "The 2023 Mars Orbit Rendezvous Test relied on Mars Communications Network Node-3 for real-time telemetry transmission during the autonomous docking sequence.",
+        "disamb": {"country": "US", "aliases": []},
+        "ver": {"url": null, "rev_id": null}
+      },
+      "time_window": {
+        "start": "2023-05-01",
+        "end": "2023-05-15",
+        "source": "text_infer"
+      }
+    }
+  ]
+}
