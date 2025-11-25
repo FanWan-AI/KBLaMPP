@@ -9,6 +9,7 @@ torch>=2.2.2,<3
 transformers>=4.40.0,<5
 sentencepiece>=0.1.99
 huggingface-hub>=0.16.5
+modelscope>=1.10.0
 
 # Retrieval/quantisation helpers
 faiss-cpu>=1.7.3

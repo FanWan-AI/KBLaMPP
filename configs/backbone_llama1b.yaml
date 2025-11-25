@@ -1,4 +1,4 @@
-backbone: "meta-llama/Llama-3.2-1B-Instruct"
+backbone: "LLM-Research/Llama-3.2-1B-Instruct"
 d_model: 2048
 # Top‑k gating dimension for keys/values; adjust to fit your GPU
 d_k: 384

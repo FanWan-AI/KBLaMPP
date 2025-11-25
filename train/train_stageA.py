@@ -13,13 +13,20 @@ prepares everything required for training.
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+from typing import Any, Tuple, cast
 
 import torch
 import torch.nn.functional as F
 import yaml
 from torch.optim import AdamW
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+try:  # Optional dependency for mainland-friendly downloads
+    from modelscope import snapshot_download as ms_snapshot_download  # type: ignore
+except ImportError:  # pragma: no cover
+    ms_snapshot_download = None
 
 from kblampp.knowledge_index import KnowledgeIndex
 from kblampp.kb_store import KBValueStore
@@ -31,11 +38,96 @@ from .dataloader import get_dataloader
 ROOT = Path(__file__).resolve().parents[1]
 
 
+MODEL_SCOPE_CACHE = Path(os.environ.get("MODEL_SCOPE_CACHE_DIR", Path.home() / ".cache" / "modelscope" / "snapshots"))
+
+
+def as_float(value: Any, default: float) -> float:
+    """Coerce YAML-loaded numbers (including scientific-notation strings) to float."""
+
+    if value is None:
+        return float(default)
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return float(value)
+        except ValueError as exc:  # pragma: no cover - config error path
+            raise ValueError(f"Expected numeric value but got '{value}'") from exc
+    raise TypeError(f"Unsupported type for numeric field: {type(value)!r}")
+
+
+def load_backbone_with_fallback(
+    model_name: str,
+    device: torch.device,
+    *,
+    source: str = "auto",
+    revision: str | None = None,
+) -> Tuple[Any, Any, str]:
+    """Load backbone preferring ModelScope, then HuggingFace as a fallback."""
+
+    hf_kwargs: dict[str, Any] = {"trust_remote_code": True}
+    if revision:
+        hf_kwargs["revision"] = revision
+
+    last_error: Exception | None = None
+    if source in {"auto", "modelscope"}:
+        if ms_snapshot_download is None:
+            msg = "ModelScope is not installed (pip install modelscope)"
+            if source == "modelscope":
+                raise RuntimeError(msg) from None
+            print(f"[train_stageA] {msg}; falling back to HuggingFace", flush=True)
+        else:
+            try:
+                MODEL_SCOPE_CACHE.mkdir(parents=True, exist_ok=True)
+                cache_dir = ms_snapshot_download(
+                    model_name,
+                    revision=revision or "master",
+                    cache_dir=str(MODEL_SCOPE_CACHE),
+                )
+                model = cast(torch.nn.Module, AutoModelForCausalLM.from_pretrained(cache_dir, **hf_kwargs))
+                model.to(device)
+                model = cast(AutoModelForCausalLM, model)
+                tokenizer = AutoTokenizer.from_pretrained(cache_dir, **hf_kwargs)
+                return model, tokenizer, "modelscope"
+            except Exception as exc:  # pragma: no cover - network dependent
+                last_error = exc
+                if source == "modelscope":
+                    raise
+                print(
+                    f"[train_stageA] ModelScope load failed for '{model_name}' ({exc}); trying HuggingFace",
+                    flush=True,
+                )
+
+    if source in {"auto", "huggingface"}:
+        try:
+            model = cast(torch.nn.Module, AutoModelForCausalLM.from_pretrained(model_name, **hf_kwargs))
+            model.to(device)
+            model = cast(AutoModelForCausalLM, model)
+            tokenizer = AutoTokenizer.from_pretrained(model_name, **hf_kwargs)
+            return model, tokenizer, "huggingface"
+        except Exception as exc:  # pragma: no cover - network dependent
+            last_error = exc
+            if source == "huggingface":
+                raise
+            raise RuntimeError(
+                f"Failed to load '{model_name}' from both ModelScope and HuggingFace"
+            ) from exc
+
+    raise last_error or RuntimeError(f"Unknown model source '{source}'")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Train KBLaM++ Stage A")
     parser.add_argument("--config", type=str, required=True, help="Path to YAML config file")
     parser.add_argument("--device", type=str, default=None, help="Torch device override (default: auto)")
     parser.add_argument("--max_steps", type=int, default=None, help="Optional override for optimiser updates")
+    parser.add_argument(
+        "--model_source",
+        choices=["auto", "huggingface", "modelscope"],
+        default="auto",
+        help="Where to pull backbone weights from",
+    )
+    parser.add_argument("--model_revision", type=str, default=None, help="Optional revision/tag for the backbone")
     args = parser.parse_args()
 
     # Load config
@@ -71,12 +163,17 @@ def main():
         device = torch.device(args.device)
     else:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    backbone = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    backbone, tokenizer, provider = load_backbone_with_fallback(
+        model_name,
+        device,
+        source=args.model_source,
+        revision=args.model_revision,
+    )
+    print(f"[train_stageA] Loaded backbone via {provider}")
     # Stage A freezes every backbone parameter so that we only train the KB
     # modules.  This keeps memory usage predictable on small GPUs and matches
     # the Plan B spec in the docs.
     backbone.requires_grad_(False)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.pad_token_id = tokenizer.eos_token_id
@@ -105,10 +202,12 @@ def main():
     ).to(device)
 
     train_cfg = bcfg.get("train", {})
+    lr = as_float(train_cfg.get("lr"), 5e-4)
+    weight_decay = as_float(train_cfg.get("weight_decay"), 0.01)
     optimiser = AdamW(
         inj_model.parameters(),
-        lr=train_cfg.get("lr", 5e-4),
-        weight_decay=train_cfg.get("weight_decay", 0.01),
+        lr=lr,
+        weight_decay=weight_decay,
     )
     dataloader = get_dataloader(
         str(dataset_path),

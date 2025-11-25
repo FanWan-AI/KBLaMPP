@@ -321,3 +321,26 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 #### 后续建议
 1. 将轻量版背骨（如TinyLlama或自备checkpoint）缓存至本地存储，使train_stageA.py在内网环境下可直接加载。
 2. 如需真实语义嵌入，可在具备外网或镜像的节点重新运行`encode/index`，然后同步store目录。
+
+### V1.11 ModelScope主干加载通道
+- 2025-11-25 14:10
+
+#### 代码改动内容
+- `train/train_stageA.py`
+   - 新增 `--model_source {auto,huggingface,modelscope}` 与 `--model_revision` 参数。默认模式下脚本优先通过ModelScope `snapshot_download` 拉取 `LLM-Research/Llama-3.2-1B-Instruct`，仅在ModelScope缺失或失败时才回退到HuggingFace。
+   - 引入 `load_backbone_with_fallback` 辅助函数，统一处理缓存目录（`$MODEL_SCOPE_CACHE_DIR`或`~/.cache/modelscope/snapshots`）和日志提示，让离线训练流程可重复。
+- `offline/encode_kv.py`：加入与训练脚本一致的 `--model_source`/`--model_revision` 参数，并默认先尝试从ModelScope获取 `BAAI/bge-small-en-v1.5`，失败时再回退到HuggingFace；若两者均不可用则降级为确定性随机嵌入。
+- `requirements.txt`：加入 `modelscope>=1.10.0` 依赖，确保脚本可直接调用ModelScope SDK。
+- `README.md`：说明“auto”模式会优先走ModelScope，并介绍如何在离线编码脚本中使用相同的参数。
+
+#### 使用指引
+1. 安装依赖：`pip install modelscope`（可使用ModelScope官方或本地镜像源）。
+2. 默认 `--model_source auto` 会先尝试ModelScope，只有在镜像不可用时才回退到HuggingFace；若想强制某一端，可显式传 `--model_source modelscope` 或 `--model_source huggingface`：
+    ```bash
+    python -m train.train_stageA --config configs/synth_world.yaml --max_steps 50 --model_source auto
+    ```
+3. 如需自定义ModelScope缓存位置，设置 `MODEL_SCOPE_CACHE_DIR=/path/to/cache`。
+
+#### 后续可选事项
+- 将 `configs/backbone_llama1b.yaml` 扩展 `model_source` 字段，以便在多配置之间共享策略。
+- 若后续需要在离线环境下获取句向量模型，可为 `offline/encode_kv.py` 增加类似的ModelScope回退逻辑。（已完成本版本改造，可继续推广到其它脚本。）

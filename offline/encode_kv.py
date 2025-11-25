@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any, List, Optional
@@ -20,6 +21,13 @@ except ImportError:  # pragma: no cover
     AutoTokenizer = None  # type: ignore[assignment]
 
 HAS_TORCH = torch is not None and nn is not None and AutoModel is not None and AutoTokenizer is not None
+
+try:
+    from modelscope import snapshot_download as ms_snapshot_download  # type: ignore
+except ImportError:  # pragma: no cover
+    ms_snapshot_download = None
+
+MODEL_SCOPE_CACHE = Path(os.environ.get("MODEL_SCOPE_CACHE_DIR", Path.home() / ".cache" / "modelscope" / "snapshots"))
 
 
 def parse_timestamp(value: Optional[str]) -> float:
@@ -156,6 +164,13 @@ def main() -> None:
     parser.add_argument("--d_ctx", type=int, default=384, help="Context embedding dimension")
     parser.add_argument("--d_tau", type=int, default=32, help="Time embedding dimension")
     parser.add_argument("--model", type=str, default="BAAI/bge-small-en-v1.5", help="Sentence encoder name")
+    parser.add_argument(
+        "--model_source",
+        choices=["auto", "huggingface", "modelscope"],
+        default="auto",
+        help="Preferred provider for the sentence encoder",
+    )
+    parser.add_argument("--model_revision", type=str, default=None, help="Optional revision tag for the encoder")
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size for sentence encoder")
     parser.add_argument("--max_length", type=int, default=128, help="Max tokens for sentence encoder")
     parser.add_argument("--seed", type=int, default=0, help="Random seed for fallbacks")
@@ -177,17 +192,70 @@ def main() -> None:
     tokenizer = None
     model = None
     device = None
+    provider: Optional[str] = None
+    hf_kwargs: dict[str, Any] = {"trust_remote_code": True}
+    if args.model_revision:
+        hf_kwargs["revision"] = args.model_revision
+
     if HAS_TORCH:
         try:
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-            tokenizer = AutoTokenizer.from_pretrained(args.model)
-            model = AutoModel.from_pretrained(args.model).to(device)
-        except OSError as exc:  # pragma: no cover - offline fallback
-            print(
-                f"[warning] Failed to download '{args.model}' ({exc}); falling back to deterministic random embeddings",
-                flush=True,
-            )
+        except Exception as exc:  # pragma: no cover - shouldn't happen
+            print(f"[warning] Failed to set up torch device ({exc}); falling back to random embeddings", flush=True)
             use_encoder = False
+
+    last_error: Exception | None = None
+    if use_encoder and device is not None:
+        if args.model_source in {"auto", "modelscope"}:
+            if ms_snapshot_download is None:
+                msg = "ModelScope is not installed (pip install modelscope)"
+                if args.model_source == "modelscope":
+                    raise RuntimeError(msg)
+                print(f"[warning] {msg}; falling back to HuggingFace", flush=True)
+            else:
+                try:
+                    MODEL_SCOPE_CACHE.mkdir(parents=True, exist_ok=True)
+                    cache_dir = ms_snapshot_download(
+                        args.model,
+                        revision=args.model_revision or "master",
+                        cache_dir=str(MODEL_SCOPE_CACHE),
+                    )
+                    tokenizer = AutoTokenizer.from_pretrained(cache_dir, **hf_kwargs)
+                    model = AutoModel.from_pretrained(cache_dir, **hf_kwargs).to(device)
+                    provider = "modelscope"
+                except Exception as exc:  # pragma: no cover - network dependent
+                    last_error = exc
+                    if args.model_source == "modelscope":
+                        raise
+                    print(
+                        f"[warning] ModelScope load failed for '{args.model}' ({exc}); trying HuggingFace",
+                        flush=True,
+                    )
+
+        if provider is None and args.model_source in {"auto", "huggingface"}:
+            try:
+                tokenizer = AutoTokenizer.from_pretrained(args.model, **hf_kwargs)
+                model = AutoModel.from_pretrained(args.model, **hf_kwargs).to(device)
+                provider = "huggingface"
+            except Exception as exc:  # pragma: no cover - offline fallback
+                last_error = exc
+                if args.model_source == "huggingface":
+                    raise
+
+        if provider is None:
+            use_encoder = False
+            if last_error is not None:
+                print(
+                    f"[warning] Failed to download '{args.model}' via all providers ({last_error});"
+                    " falling back to deterministic random embeddings",
+                    flush=True,
+                )
+            else:
+                print(
+                    f"[warning] Unable to load '{args.model}' (unknown reason);"
+                    " falling back to deterministic random embeddings",
+                    flush=True,
+                )
 
     if use_encoder and tokenizer is not None and model is not None and device is not None:
         e_h = encode_texts(

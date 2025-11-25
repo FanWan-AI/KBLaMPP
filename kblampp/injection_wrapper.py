@@ -94,13 +94,36 @@ class KBInjectedModel(nn.Module):
         # 1. Run embedding and first few layers
         embed = self.backbone.get_input_embeddings()
         hidden_states = embed(input_ids)
-        # Position IDs / Rotary etc. are handled by HuggingFace; we skip details here.
+
+        # Prepare decoder masks/positional encodings just like the original model
+        batch_size, seq_len = input_ids.shape
+        position_ids = torch.arange(seq_len, device=input_ids.device).unsqueeze(0).expand(batch_size, -1)
+        decoder_attention_mask = attention_mask
+        if decoder_attention_mask is None:
+            decoder_attention_mask = torch.ones((batch_size, seq_len), device=input_ids.device)
+        decoder_attention_mask = self.backbone.model._prepare_decoder_attention_mask(  # type: ignore[attr-defined]
+            decoder_attention_mask,
+            (batch_size, seq_len),
+            hidden_states,
+            past_key_values_length=0,
+        )
+        if hasattr(self.backbone.model, "rotary_emb"):
+            position_embeddings = self.backbone.model.rotary_emb(hidden_states, seq_len=seq_len)  # type: ignore[attr-defined]
+        else:
+            position_embeddings = None
+
         # We run through each block up to inject_layer - 1
         blocks: List[nn.Module] = list(self.backbone.model.layers)
         for i, block in enumerate(blocks):
             if i == self.inject_layer:
                 break
-            hidden_states = block(hidden_states, attention_mask=attention_mask, **kwargs)
+            hidden_states = block(
+                hidden_states,
+                attention_mask=decoder_attention_mask,
+                position_ids=position_ids,
+                position_embeddings=position_embeddings,
+                **kwargs,
+            )
 
         # 2. Compute query vectors at injection layer
         Q = self.linear_q(hidden_states)  # [B,T,d_k]
@@ -136,7 +159,13 @@ class KBInjectedModel(nn.Module):
         hidden_states, beta = self.fusion(hidden_states, V_proj, attn_mask=attention_mask)
         # 8. Continue running the remaining layers
         for j in range(self.inject_layer, len(blocks)):
-            hidden_states = blocks[j](hidden_states, attention_mask=attention_mask, **kwargs)
+            hidden_states = blocks[j](
+                hidden_states,
+                attention_mask=decoder_attention_mask,
+                position_ids=position_ids,
+                position_embeddings=position_embeddings,
+                **kwargs,
+            )
         # 9. Final LM head
         logits = self.backbone.lm_head(hidden_states)
         return logits

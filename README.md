@@ -66,15 +66,26 @@ the code highlight where your code should go.
   subset (e.g. only `encode` + `index`) and `--force` to
   overwrite existing artefacts.
 
-3.  (Optional manual flow.) If you prefer step‑by‑step control, run
-  `offline/encode_kv.py` to encode your five‑tuples into key and
+3.  (Optional manual flow.) If you prefer step-by-step control, run
+  `offline/encode_kv.py` to encode your five-tuples into key and
   value matrices, then follow up with `offline/build_index.py`
   to create the ANN index.  Adjust the `d_k`/`d_v`/`d_ctx`
-  dimensions in the config to suit your hardware.
+  dimensions in the config to suit your hardware.  The encoder
+  script now mirrors the training pipeline’s provider flags, so
+  `--model_source auto` (default) pulls `BAAI/bge-small-en-v1.5`
+  from ModelScope first and only falls back to HuggingFace if
+  needed; pass `--model_source huggingface` if you want to skip
+  ModelScope entirely.
 
 5.  Train the KBLaM++ model using `train/train_stageA.py`.  Make
-    sure your YAML config specifies the correct backbone, embedding
-    model, dimension sizes and dataset locations.
+  sure your YAML config specifies the correct backbone, embedding
+  model, dimension sizes and dataset locations.  Install
+  `modelscope` (`pip install modelscope`) so the default
+  `--model_source auto` path can fetch
+  `LLM-Research/Llama-3.2-1B-Instruct` from ModelScope first and
+  silently fall back to HuggingFace if required.  Use
+  `--model_source huggingface` only when you deliberately want to
+  skip ModelScope.
 
 6.  Evaluate your model on held‑out questions using the utilities in
     `eval/`.
