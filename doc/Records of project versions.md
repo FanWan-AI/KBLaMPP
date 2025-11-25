@@ -325,6 +325,87 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 ### V1.11 ModelScope主干加载通道
 - 2025-11-25 14:10
 
+
+### V1.12 Stage A 知识注入闭环说明
+- 2025-11-25 16:10
+
+#### 代码/运行层面的新增内容
+- `train/train_stageA.py`
+   - 在加载 `KnowledgeIndex` 前默认设置 `KBLAMPP_FORCE_BRUTE_INDEX=1`，规避FAISS在部分CPU上触发的非法指令；若确认FAISS稳定可通过环境变量覆盖。
+   - 与 `load_backbone_with_fallback` 配合，形成“ModelScope优先 + HuggingFace回退 + CPU安全索引”的闭环，确保离线环境也能完成冒烟。
+- `kblampp/knowledge_index.py`
+   - 引入“FAISS可用 → 使用ANN；否则自动切换NumPy暴力检索”的双轨实现。加载流程优先尝试 `index.faiss`，失败后自动读取 `store/*/K.npy`，并打印提示。
+   - 暴力检索路径保持余弦归一化、批量top‑k语义；无需修改上层代码即可切换。
+- `kblampp/injection_wrapper.py` & `kblampp/fusion.py`
+   - 完整复刻主干的rotary方案：从 `attention_mask` 推导 `position_ids`，调用 `backbone.model.rotary_emb(hidden_states, position_ids)`（或旧签名）获得 `(cos,sin)`，并为每个Llama层提供一致的位置编码。
+   - 由 `_build_decoder_attention_mask` 构造 `[B,1,T,T]` 因果掩码，使仅执行部分层时仍满足Llama解码约束。
+   - 知识融合阶段统一传入布尔 `key_padding_mask`，避免PyTorch多头注意力因mask形状不符而报错，保持门控灰度上线能力。
+
+#### 端到端训练/注入流程（含数据流与维度）
+1. **离线产物（`offline/run_pipeline.py`）**
+    - `store/<dataset>/K.npy`：`(N, d_k)` 当前 `d_k=384`；供ANN/暴力检索。
+    - `store/<dataset>/V.npy`：`(N, d_v)`，`d_v=384`；传递给值通道。
+    - `meta/ctx_vec.npy`：`(N, d_ctx=384)`；支持上下文得分。
+    - `meta/tau_min.npy`、`tau_max.npy`：`(N,)` 秒数；做时间窗匹配。
+    - `meta/entity_ids.npy`、`rel_ids.npy`：`(N,)` 紧凑整数映射，供后续关系/实体嵌入。
+    - `index_hnsw/index.faiss`：若FAISS不可用则由上述数组直接支持暴力检索。
+
+2. **配置与数据加载**
+    - `configs/synth_world.yaml` 描述 QA/Store 路径、ANN参数、`backbone_config`。
+    - `QADataset` 输出：
+       - `input_ids`/`labels` `[B,T]`（默认 `T≤512`），答案部分label为真实token，其余填 `-100`。
+       - `attention_mask` `[B,T]`，padding=0。
+       - `question_time` `[B,2]`（起止秒数）。
+
+3. **骨干加载与位置编码**
+    - `load_backbone_with_fallback` 先 `modelscope.snapshot_download` → 失败才走HuggingFace；缓存目录 `~/.cache/modelscope/snapshots` 或 `$MODEL_SCOPE_CACHE_DIR`。
+    - `KBInjectedModel.forward`：
+       - `hidden_states = embedding(input_ids)`，形状 `[B,T,d_model(=2048)]`。
+       - `position_ids = cumsum(attention_mask)-1`（padding置0）。
+       - `_build_decoder_attention_mask` 生成 `[B,1,T,T]` 浮点因果掩码供Llama层使用。
+       - `rotary_emb(hidden_states, position_ids)` 产出 `(cos,sin)`；若Transformers旧版本不支持位置参数则自动退回旧签名。
+
+4. **Top‑k检索及张量维度**
+    - 在 `inject_layer=8` 之前按原模型堆叠Block。
+    - 到达注入点：
+       - `Q = linear_q(hidden_states)`，`[B,T,d_k]`。
+       - 展平 `Q_flat ∈ ℝ^{(B·T)×d_k}`，调用 `KnowledgeIndex.query`，返回 `idx ∈ ℤ^{(B·T)×K}`（`K_top=8`）。
+       - `KBValueStore.fetch(idx)` 产出：
+          - `K_kb ∈ ℝ^{B×T×K×d_k}`，`V_kb_raw ∈ ℝ^{B×T×K×d_v}`。
+          - `ctx_vec ∈ ℝ^{B×T×K×d_ctx}`，`rel_id/ent_id ∈ ℤ^{B×T×K}`，`tau_min/tau_max ∈ ℝ^{B×T×K}`。
+
+5. **选择器与融合**
+    - `KBSelector` 根据 `Q、K_kb、ctx_vec` 与问题时间，输出：
+       - `α ∈ ℝ^{B×T×K}`（softmax稀疏门控）。
+       - `V_tilde ∈ ℝ^{B×T×d_v}`（加权聚合后的值）。
+    - `linear_v`：`V_proj = W_v · V_tilde`，`[B,T,d_model]`。
+    - `KBFusionLayer`：
+       1. `text_mha(h,h,h,key_padding_mask)` 得到 `Y_txt`。
+       2. `kb_mha(h,h,V_proj,key_padding_mask)` 得到 `Y_kb`。
+       3. `β = σ(Linear(h))`，`β ∈ [0,1]^{B×T×1}`，默认偏置-2（知识分支灰度上线）。
+       4. `hidden_states = Y_txt + β·Y_kb`，再送入剩余Transformer层并通过 `lm_head` 生成logits。
+
+6. **优化与控制**
+    - Backbone完全冻结；仅训练选择器、融合层及少量线性头。
+    - `AdamW(lr=5e-4, weight_decay=0.01)`，支持 `grad_accum`（默认4）与 `--max_steps`（冒烟常设50）。
+    - 损失：标准交叉熵，问题部分被 `-100` 掩码忽略。
+
+7. **推荐命令链路**
+    ```bash
+    # 刷新离线产物（若已有K/V可仅跑encode+index）
+    python offline/run_pipeline.py --config configs/synth_world.yaml --steps encode index --force
+
+    # Stage A 冒烟（ModelScope优先、索引默认暴力回退）
+    MODEL_SCOPE_CACHE_DIR=/path/to/cache \
+    python -m train.train_stageA --config configs/synth_world.yaml --max_steps 50 --model_source auto
+    ```
+    - 若已确认FAISS与CPU指令集兼容，可显式 `export KBLAMPP_FORCE_BRUTE_INDEX=0` 以重新启用ANN搜索。
+
+#### 位置编码/知识注入的当前限制与下一步
+- 目前仍为单注入层，未显式传递 `past_key_values`；若需更长上下文或多注入点，需扩展wrapper以切分Block并维护KV缓存。
+- `rel_id/ent_id` 仅用于记录；未来可基于 `meta/*.npy` 构建可训练嵌入并注入selector打分中。
+- 暴力检索适用于当前 `N≈10^5` 规模；若KB继续增长请在具备支持的机器上安装FAISS‑CPU/GPU，并移除强制回退。
+- 计划在README补充“常见错误（模型下载失败/Illegal Instruction）”指南，以及在Stage A完成第一次跑通后附带日志与指标样例以便复现。
 #### 代码改动内容
 - `train/train_stageA.py`
    - 新增 `--model_source {auto,huggingface,modelscope}` 与 `--model_revision` 参数。默认模式下脚本优先通过ModelScope `snapshot_download` 拉取 `LLM-Research/Llama-3.2-1B-Instruct`，仅在ModelScope缺失或失败时才回退到HuggingFace。

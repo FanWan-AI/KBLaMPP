@@ -78,6 +78,19 @@ class KBInjectedModel(nn.Module):
         self.linear_q = nn.Linear(backbone.config.hidden_size, d_k, bias=False)
         self.linear_v = nn.Linear(d_v, backbone.config.hidden_size, bias=False)
 
+    @staticmethod
+    def _build_decoder_attention_mask(attention_mask: torch.Tensor, hidden_states: torch.Tensor) -> torch.Tensor:
+        """Create causal + padding mask matching Llama-style decoder expectations."""
+
+        batch_size, seq_len = attention_mask.shape
+        device = hidden_states.device
+        dtype = hidden_states.dtype
+        inf = torch.finfo(dtype).min
+        causal = torch.triu(torch.full((seq_len, seq_len), inf, device=device, dtype=dtype), diagonal=1)
+        causal = causal.unsqueeze(0).unsqueeze(0)  # [1,1,T,T]
+        padding = (1 - attention_mask).unsqueeze(1).unsqueeze(1).to(dtype) * inf  # [B,1,1,T]
+        return causal + padding
+
     def forward(
         self,
         input_ids: torch.Tensor,
@@ -95,35 +108,40 @@ class KBInjectedModel(nn.Module):
         embed = self.backbone.get_input_embeddings()
         hidden_states = embed(input_ids)
 
-        # Prepare decoder masks/positional encodings just like the original model
         batch_size, seq_len = input_ids.shape
-        position_ids = torch.arange(seq_len, device=input_ids.device).unsqueeze(0).expand(batch_size, -1)
-        decoder_attention_mask = attention_mask
-        if decoder_attention_mask is None:
-            decoder_attention_mask = torch.ones((batch_size, seq_len), device=input_ids.device)
-        decoder_attention_mask = self.backbone.model._prepare_decoder_attention_mask(  # type: ignore[attr-defined]
-            decoder_attention_mask,
-            (batch_size, seq_len),
-            hidden_states,
-            past_key_values_length=0,
-        )
-        if hasattr(self.backbone.model, "rotary_emb"):
-            position_embeddings = self.backbone.model.rotary_emb(hidden_states, seq_len=seq_len)  # type: ignore[attr-defined]
-        else:
-            position_embeddings = None
+        if attention_mask is None:
+            attention_mask = torch.ones((batch_size, seq_len), device=input_ids.device)
+        position_ids = (attention_mask.cumsum(-1) - 1).clamp(min=0)
+        position_ids = position_ids.masked_fill(attention_mask == 0, 0).long()
+        decoder_attention_mask = self._build_decoder_attention_mask(attention_mask, hidden_states)
+        position_embeddings = None
+        rotary_module = getattr(self.backbone.model, "rotary_emb", None)
+        if rotary_module is not None:
+            try:
+                position_embeddings = rotary_module(hidden_states, position_ids)
+            except TypeError:
+                position_embeddings = rotary_module(hidden_states)
+
+        def run_block(block: nn.Module, x: torch.Tensor) -> torch.Tensor:
+            outputs = block(
+                x,
+                attention_mask=decoder_attention_mask,
+                position_ids=position_ids,
+                position_embeddings=position_embeddings,
+                past_key_value=None,
+                output_attentions=False,
+                use_cache=False,
+            )
+            if isinstance(outputs, tuple):
+                return outputs[0]
+            return outputs
 
         # We run through each block up to inject_layer - 1
         blocks: List[nn.Module] = list(self.backbone.model.layers)
         for i, block in enumerate(blocks):
             if i == self.inject_layer:
                 break
-            hidden_states = block(
-                hidden_states,
-                attention_mask=decoder_attention_mask,
-                position_ids=position_ids,
-                position_embeddings=position_embeddings,
-                **kwargs,
-            )
+            hidden_states = run_block(block, hidden_states)
 
         # 2. Compute query vectors at injection layer
         Q = self.linear_q(hidden_states)  # [B,T,d_k]
@@ -156,16 +174,13 @@ class KBInjectedModel(nn.Module):
         # 6. Project V_tilde to model dimension
         V_proj = self.linear_v(V_tilde)  # [B,T,d_model]
         # 7. Fuse with hidden_states using KBFusionLayer
-        hidden_states, beta = self.fusion(hidden_states, V_proj, attn_mask=attention_mask)
+        fusion_padding_mask = None
+        if attention_mask is not None:
+            fusion_padding_mask = attention_mask == 0
+        hidden_states, beta = self.fusion(hidden_states, V_proj, key_padding_mask=fusion_padding_mask)
         # 8. Continue running the remaining layers
         for j in range(self.inject_layer, len(blocks)):
-            hidden_states = blocks[j](
-                hidden_states,
-                attention_mask=decoder_attention_mask,
-                position_ids=position_ids,
-                position_embeddings=position_embeddings,
-                **kwargs,
-            )
+            hidden_states = run_block(blocks[j], hidden_states)
         # 9. Final LM head
         logits = self.backbone.lm_head(hidden_states)
         return logits

@@ -181,6 +181,7 @@ def main():
     # Knowledge components
     # The index + store encapsulate all offline artefacts, keeping the training
     # loop agnostic to how the KB was produced.
+    os.environ.setdefault("KBLAMPP_FORCE_BRUTE_INDEX", "1")
     index = KnowledgeIndex.load(str(index_dir))
     kb_store = KBValueStore(str(store_root), device)
     d_k, d_v, d_ctx = bcfg["d_k"], bcfg["d_v"], bcfg["d_ctx"]

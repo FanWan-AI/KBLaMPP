@@ -19,15 +19,24 @@ ImportError.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Tuple, Optional
+import os
 import numpy as np
 
-try:
+
+def _force_brute() -> bool:
+    return os.environ.get("KBLAMPP_FORCE_BRUTE_INDEX", "0").lower() in {"1", "true", "yes"}
+
+
+try:  # pragma: no cover - optional dependency
     import faiss  # type: ignore
-except ImportError as exc:  # pragma: no cover
-    raise ImportError(
-        "FAISS is required for KBLaM++ knowledge index.  Install faiss-cpu or faiss-gpu."
-    ) from exc
+except Exception:  # pragma: no cover - faiss missing or unusable
+    faiss = None  # type: ignore
+
+
+def _faiss_available() -> bool:
+    return faiss is not None and not _force_brute()
 
 
 @dataclass
@@ -51,7 +60,8 @@ class KnowledgeIndex:
     dim: int
     method: str = "hnsw"
     similarity: str = "cosine"
-    index: Optional[faiss.Index] = None
+    index: Optional["faiss.Index"] = None  # type: ignore[name-defined]
+    _bruteforce_keys: Optional[np.ndarray] = None
 
     def _l2_normalise(self, X: np.ndarray) -> np.ndarray:
         """Optionally L2 normalise key/query vectors for cosine similarity.
@@ -78,6 +88,11 @@ class KnowledgeIndex:
         """
         assert keys.dtype == np.float32, "Keys must be float32"
         keys_norm = self._l2_normalise(keys)
+
+        if not _faiss_available():
+            self._bruteforce_keys = keys_norm.copy()
+            self.index = None
+            return
 
         if self.method == "hnsw":
             # HNSW works well for medium-sized stores (<1M entries) and keeps
@@ -120,13 +135,24 @@ class KnowledgeIndex:
         indices : np.ndarray of shape (M, k)
             The indices of the nearest neighbours in the original key array.
         """
-        if self.index is None:
+        if self.index is None and self._bruteforce_keys is None:
             raise RuntimeError("Index has not been built.  Call fit() first.")
         assert queries.shape[1] == self.dim, "Query dimension mismatch"
         # Convert to float32 because FAISS bindings expect contiguous float32
         # buffers; float16/64 inputs would otherwise trigger subtle segfaults.
         queries_norm = self._l2_normalise(queries.astype(np.float32))
-        D, I = self.index.search(queries_norm, k)
+        if self.index is not None:
+            D, I = self.index.search(queries_norm, k)
+            return D, I
+        assert self._bruteforce_keys is not None
+        keys = self._l2_normalise(self._bruteforce_keys)
+        scores = queries_norm @ keys.T  # [M, N]
+        top_idx = np.argpartition(scores, -k, axis=1)[:, -k:]
+        # argpartition gives unordered set; sort within top-k for consistency
+        top_scores = np.take_along_axis(scores, top_idx, axis=1)
+        order = np.argsort(-top_scores, axis=1)
+        I = np.take_along_axis(top_idx, order, axis=1)
+        D = np.take_along_axis(top_scores, order, axis=1)
         return D, I
 
     def save(self, path: str) -> None:
@@ -137,13 +163,34 @@ class KnowledgeIndex:
             "similarity": self.similarity,
         }
         np.save(f"{path}/meta.npy", meta, allow_pickle=True)
-        assert self.index is not None, "Index is not built"
-        faiss.write_index(self.index, f"{path}/index.faiss")
+        if self.index is not None:
+            faiss.write_index(self.index, f"{path}/index.faiss")
+        else:  # pragma: no cover - brute force fallback
+            # Store the dense keys to allow loading without FAISS
+            assert self._bruteforce_keys is not None
+            np.save(f"{path}/keys.npy", self._bruteforce_keys)
 
     @classmethod
     def load(cls, path: str) -> "KnowledgeIndex":
         """Load an index from disk."""
         meta = np.load(f"{path}/meta.npy", allow_pickle=True).item()
         obj = cls(dim=meta["dim"], method=meta["method"], similarity=meta["similarity"])
-        obj.index = faiss.read_index(f"{path}/index.faiss")
+        index_path = Path(path) / "index.faiss"
+        if _faiss_available() and index_path.exists():
+            try:
+                obj.index = faiss.read_index(str(index_path))
+                return obj
+            except Exception as exc:  # pragma: no cover - runtime CPU mismatch
+                print(
+                    f"[knowledge_index] Failed to load FAISS index ({exc}); falling back to brute-force",
+                    flush=True,
+                )
+        # Brute-force fallback using stored keys (expect parent dir holds K.npy)
+        store_root = Path(path).parent
+        keys_path = store_root / "K.npy"
+        if not keys_path.exists():
+            raise FileNotFoundError(
+                f"Brute-force index fallback requires {keys_path}, but it was not found"
+            )
+        obj._bruteforce_keys = np.load(keys_path).astype(np.float32)
         return obj

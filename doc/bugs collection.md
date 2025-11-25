@@ -87,3 +87,14 @@ Make sure to have access to it at https://huggingface.co/meta-llama/Llama-3.2-1B
 
 Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct/resolve/main/config.json.
 Access to model meta-llama/Llama-3.2-1B-Instruct is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+
+### V1.12
+- time: 1125 15:25
+python -m train.train_stageA --config configs/synth_world.yaml --max_steps 50
+Downloading Model from https://www.modelscope.cn to directory: /home/lenovo/.cache/modelscope/snapshots/LLM-Research/Llama-3.2-1B-Instruct
+2025-11-25 15:19:04,258 - modelscope - INFO - Target directory already exists, skipping creation.
+[train_stageA] Loaded backbone via modelscope
+/home/lenovo/miniforge3/envs/devcpu/lib/python3.10/site-packages/torch/nn/modules/module.py:1750: FutureWarning: `past_key_value` is deprecated and will be removed in version 4.58 for `LlamaDecoderLayer.forward`. Use `past_key_values` instead.
+  return forward_call(*args, **kwargs)
+非法指令 (核心已转储)
