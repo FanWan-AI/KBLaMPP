@@ -173,10 +173,23 @@ def main() -> None:
     entity_seq = build_id_sequence(head_ids)
     rel_seq = build_id_sequence(rel_ids)
 
+    use_encoder = HAS_TORCH
+    tokenizer = None
+    model = None
+    device = None
     if HAS_TORCH:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        tokenizer = AutoTokenizer.from_pretrained(args.model)
-        model = AutoModel.from_pretrained(args.model).to(device)
+        try:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            tokenizer = AutoTokenizer.from_pretrained(args.model)
+            model = AutoModel.from_pretrained(args.model).to(device)
+        except OSError as exc:  # pragma: no cover - offline fallback
+            print(
+                f"[warning] Failed to download '{args.model}' ({exc}); falling back to deterministic random embeddings",
+                flush=True,
+            )
+            use_encoder = False
+
+    if use_encoder and tokenizer is not None and model is not None and device is not None:
         e_h = encode_texts(
             heads,
             tokenizer=tokenizer,
@@ -240,7 +253,8 @@ def main() -> None:
         tau_min_arr = tau_min_tensor.cpu().numpy().astype("float32")
         tau_max_arr = tau_max_tensor.cpu().numpy().astype("float32")
     else:
-        print("[warning] torch not available; falling back to random embeddings", flush=True)
+        reason = "torch not available" if not HAS_TORCH else "encoder offline"
+        print(f"[warning] {reason}; falling back to random embeddings", flush=True)
         K = fallback_random_embeddings((N, d_k), args.seed)
         V = fallback_random_embeddings((N, d_v), args.seed + 1)
         ctx_vec = fallback_random_embeddings((N, d_ctx), args.seed + 2)

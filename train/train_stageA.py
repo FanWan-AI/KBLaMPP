@@ -35,6 +35,7 @@ def main():
     parser = argparse.ArgumentParser(description="Train KBLaM++ Stage A")
     parser.add_argument("--config", type=str, required=True, help="Path to YAML config file")
     parser.add_argument("--device", type=str, default=None, help="Torch device override (default: auto)")
+    parser.add_argument("--max_steps", type=int, default=None, help="Optional override for optimiser updates")
     args = parser.parse_args()
 
     # Load config
@@ -117,7 +118,7 @@ def main():
     )
 
     grad_accum = max(1, train_cfg.get("grad_accum", 1))
-    max_steps = train_cfg.get("max_steps", 1000)
+    max_steps = args.max_steps or train_cfg.get("max_steps", 1000)
     log_interval = train_cfg.get("log_interval", 50)
 
     inj_model.train()

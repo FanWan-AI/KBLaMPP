@@ -10,9 +10,21 @@ from typing import List
 
 
 def load_world(world_path: Path) -> List[dict]:
+    """Load facts from either JSONL (one fact per line) or JSON world file."""
+
+    if world_path.suffix.lower() == ".json":
+        world_obj = json.loads(world_path.read_text(encoding="utf-8"))
+        facts = world_obj.get("facts")
+        if not isinstance(facts, list):
+            raise ValueError("World JSON missing 'facts' array")
+        return facts
+
     facts: List[dict] = []
     with world_path.open(encoding="utf-8") as f:
         for line in f:
+            line = line.strip()
+            if not line:
+                continue
             facts.append(json.loads(line))
     return facts
 
@@ -25,13 +37,16 @@ def get_time_window(fact: dict) -> tuple[str, str]:
         return "", ""
     return start, end
 
+def render_relation(text: str) -> str:
+    return (text or "").replace("_", " ")
+
 
 def build_single_question(fact: dict, fact_idx: int, dataset: str) -> dict:
     start, end = get_time_window(fact)
     head = fact["head"]["name"]
-    relation = fact["relation"]["name"]
+    relation = render_relation(fact["relation"]["name"])
     tail = fact["tail"]["name"]
-    question = f"What is the {relation} of {head}?"
+    question = f"What did {head} {relation}?"
     return {
         "qid": f"{dataset}_{fact_idx:05d}",
         "dataset": dataset,
@@ -39,6 +54,7 @@ def build_single_question(fact: dict, fact_idx: int, dataset: str) -> dict:
         "answer": tail,
         "type": "single-hop",
         "supporting_facts": [fact_idx],
+        "supporting_relations": [fact["relation"].get("id")],
         "question_time": {"start": start, "end": end},
     }
 
@@ -46,9 +62,10 @@ def build_single_question(fact: dict, fact_idx: int, dataset: str) -> dict:
 def build_temporal_question(fact: dict, fact_idx: int, dataset: str) -> dict:
     start, end = get_time_window(fact)
     head = fact["head"]["name"]
-    relation = fact["relation"]["name"]
+    relation = render_relation(fact["relation"]["name"])
     tail = fact["tail"]["name"]
-    question = f"Who was the {relation} of {head} in {start[:4]}?"
+    year = start[:4] if start else "that period"
+    question = f"What did {head} {relation} during {year}?"
     return {
         "qid": f"{dataset}_temporal_{fact_idx:05d}",
         "dataset": dataset,
@@ -56,6 +73,7 @@ def build_temporal_question(fact: dict, fact_idx: int, dataset: str) -> dict:
         "answer": tail,
         "type": "temporal",
         "supporting_facts": [fact_idx],
+        "supporting_relations": [fact["relation"].get("id")],
         "question_time": {"start": start, "end": end},
     }
 
@@ -65,9 +83,10 @@ def build_multi_question(fact_a: dict, fact_b: dict, idx_a: int, idx_b: int, dat
     start_b, end_b = get_time_window(fact_b)
     head_a = fact_a["head"]["name"]
     tail_a = fact_a["tail"]["name"]
-    relation_b = fact_b["relation"]["name"]
+    relation_a = render_relation(fact_a["relation"]["name"])
+    relation_b = render_relation(fact_b["relation"]["name"])
     tail_b = fact_b["tail"]["name"]
-    question = f"If {head_a} {fact_a['relation']['name']} {tail_a}, who {relation_b} {tail_a}?"
+    question = f"If {head_a} {relation_a} {tail_a}, who {relation_b} {tail_a}?"
     window_start = start_a or start_b
     window_end = end_b or end_a
     return {
@@ -77,6 +96,10 @@ def build_multi_question(fact_a: dict, fact_b: dict, idx_a: int, idx_b: int, dat
         "answer": tail_b,
         "type": "multi-hop",
         "supporting_facts": [idx_a, idx_b],
+        "supporting_relations": [
+            fact_a["relation"].get("id"),
+            fact_b["relation"].get("id"),
+        ],
         "question_time": {"start": window_start, "end": window_end},
     }
 

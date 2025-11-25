@@ -6,13 +6,13 @@ backbone_config: "configs/backbone_llama1b.yaml"
 
 # Data paths (filled/created by the offline pipeline)
 data:
-  five_tuple_path: "data/5tuple/synth_world.jsonl"
-  qa_train_path:   "data/qa/synth_world_train.jsonl"
-  qa_dev_path:     "data/qa/synth_world_dev.jsonl"
+  five_tuple_path: "data/5tuple/synth_world_llm.jsonl"
+  qa_train_path:   "data/qa/synth_world_llm_train.jsonl"
+  qa_dev_path:     "data/qa/synth_world_llm_dev.jsonl"
 
 # Where encoded keys/values, metadata and FAISS index will be stored
 store:
-  root: "store/synth_world"
+  root: "store/synth_world_llm"
   index_subdir: "index_hnsw"
 
 # Offline pipeline defaults
