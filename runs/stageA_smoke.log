@@ -1,0 +1,10 @@
+[20:04:36] INFO - Loaded backbone via modelscope
+[20:04:36] INFO - Stage A config: batch_size=1, grad_accum=2, max_updates=2, log_interval=1
+[20:04:37] INFO - Update 1/2 | Loss 1825691.3750 | EMA 1825691.3750 | LR 5.00e-04 | 128.5 tok/s | 4.14 samples/s | ETA 00:00 | GPU 5.36 GB
+[20:04:37] INFO - Update 2/2 | Loss 5993718.0000 | EMA 2242494.0375 | LR 5.00e-04 | 190.0 tok/s | 6.18 samples/s | ETA 00:00 | GPU 5.37 GB
+[20:04:37] INFO - Training complete (Stage A) – updates run: 2
+[20:05:07] INFO - Loaded backbone via modelscope
+[20:05:07] INFO - Stage A config: batch_size=1, grad_accum=2, max_updates=2, log_interval=1
+[20:05:08] INFO - Update 1/2 | Loss 1544627.6250 | EMA 1544627.6250 | LR 5.00e-04 | 108.3 tok/s | 4.42 samples/s | ETA 00:00 | GPU 5.36 GB
+[20:05:08] INFO - Update 2/2 | Loss 4708059.5000 | EMA 1860970.8125 | LR 5.00e-04 | 176.3 tok/s | 6.41 samples/s | ETA 00:00 | GPU 5.40 GB
+[20:05:08] INFO - Training complete (Stage A) – updates run: 2

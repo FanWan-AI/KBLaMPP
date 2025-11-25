@@ -42,7 +42,7 @@ the code highlight where your code should go.
 
 ## Getting Started
 
-1.  Choose a backbone model and embedding model in `configs/`.  Three
+1. Choose a backbone model and embedding model in `configs/`.  Three
     ready‑made templates are provided:
 
     - `backbone_llama1b.yaml` – uses
@@ -53,7 +53,7 @@ the code highlight where your code should go.
       `hotpot.yaml` and `timeqa.yaml` show how to hook in your data
       sources.
 
-2.  Populate `data/raw/` with your source data **or** run the
+1. Populate `data/raw/` with your source data **or** run the
   automated pipeline:
 
   ```bash
@@ -66,7 +66,7 @@ the code highlight where your code should go.
   subset (e.g. only `encode` + `index`) and `--force` to
   overwrite existing artefacts.
 
-3.  (Optional manual flow.) If you prefer step-by-step control, run
+1. (Optional manual flow.) If you prefer step-by-step control, run
   `offline/encode_kv.py` to encode your five-tuples into key and
   value matrices, then follow up with `offline/build_index.py`
   to create the ANN index.  Adjust the `d_k`/`d_v`/`d_ctx`
@@ -77,20 +77,45 @@ the code highlight where your code should go.
   needed; pass `--model_source huggingface` if you want to skip
   ModelScope entirely.
 
-5.  Train the KBLaM++ model using `train/train_stageA.py`.  Make
-  sure your YAML config specifies the correct backbone, embedding
-  model, dimension sizes and dataset locations.  Install
-  `modelscope` (`pip install modelscope`) so the default
-  `--model_source auto` path can fetch
-  `LLM-Research/Llama-3.2-1B-Instruct` from ModelScope first and
-  silently fall back to HuggingFace if required.  Use
-  `--model_source huggingface` only when you deliberately want to
-  skip ModelScope.
+### Train, evaluate, iterate
 
-6.  Evaluate your model on held‑out questions using the utilities in
+1. Train the KBLaM++ model using `train/train_stageA.py`.  Make
+    sure your YAML config specifies the correct backbone, embedding
+    model, dimension sizes and dataset locations.  Install
+    `modelscope` (`pip install modelscope`) so the default
+    `--model_source auto` path can fetch
+    `LLM-Research/Llama-3.2-1B-Instruct` from ModelScope first and
+    silently fall back to HuggingFace if required.  Use
+    `--model_source huggingface` only when you deliberately want to
+    skip ModelScope.  A few additional tips for Stage A runs:
+
+      * Pass `--hf_token <your-token>` if the script needs to fall back to
+        HuggingFace.  The loader auto-normalises ModelScope snapshots so
+        `AutoConfig`/`AutoTokenizer` work out of the box.
+      * Use `--use_faiss` (or set `KBLAMPP_FORCE_BRUTE_INDEX=0`) to switch
+        retrieval back to the FAISS HNSW index you built in the offline
+        step; omit it to stay in brute-force debug mode.
+      * The default `configs/backbone_llama1b.yaml` now targets longer
+        runs (`max_steps=2000`, `grad_accum=2`).  Override on the CLI if
+        you need shorter smoke tests.
+      * For extended training simply raise `train.max_steps` in the
+        backbone YAML (or pass `--max_steps 4000`) and adjust
+        `train.grad_accum`/`train.batch_size` to match your VRAM budget.
+      * Stage A will now keep cycling over the dataset until it reaches
+        `max_steps`, so you can run for multiple epochs even if the default
+        synthetic set only has 200 QA pairs.  Generate more QA via
+        `offline/run_pipeline.py` (tweak `qa.train_questions`) to keep the
+        data fresh.
+      * Rich progress logs are available via `--log_interval`, optional
+        teeing to `--log_file path/to/run.log`, and structured metrics via
+        `--log_jsonl runs/stageA_metrics.jsonl`.  Use `--show_warnings` if
+        you want to re-enable the torch/transformers warnings we suppress
+        by default.
+
+1. Evaluate your model on held‑out questions using the utilities in
     `eval/`.
 
-7.  Once comfortable, switch to larger backbones (e.g. 8B models) by
+1. Once comfortable, switch to larger backbones (e.g. 8B models) by
     editing the YAML config; everything else stays the same.
 
 If you see a `TODO:` in the code, it means you need to provide an

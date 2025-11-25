@@ -1,0 +1,8 @@
+[20:06:56] INFO - Loaded backbone via modelscope
+[20:06:57] INFO - Stage A config: batch_size=1, grad_accum=2, max_updates=4000, log_interval=25
+[20:06:57] INFO - Update 1/4000 | Loss 1255673.7500 | EMA 1255673.7500 | LR 5.00e-04 | 85.5 tok/s | 3.80 samples/s | ETA 35:04 | GPU 5.33 GB
+[20:07:01] INFO - Update 25/4000 | Loss 1779203.0000 | EMA 3517600.2114 | LR 5.00e-04 | 340.5 tok/s | 12.40 samples/s | ETA 10:41 | GPU 5.40 GB
+[20:07:04] INFO - Update 50/4000 | Loss 849531.1250 | EMA 1198872.8589 | LR 5.00e-04 | 350.6 tok/s | 12.88 samples/s | ETA 10:13 | GPU 5.40 GB
+[20:07:08] INFO - Update 75/4000 | Loss 332830.0000 | EMA 402725.3502 | LR 5.00e-04 | 344.2 tok/s | 13.03 samples/s | ETA 10:02 | GPU 5.40 GB
+[20:07:12] INFO - Update 100/4000 | Loss 271070.7188 | EMA 391744.4172 | LR 5.00e-04 | 344.2 tok/s | 12.86 samples/s | ETA 10:06 | GPU 5.40 GB
+[20:07:12] INFO - Training complete (Stage A) – updates run: 100

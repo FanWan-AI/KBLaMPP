@@ -399,14 +399,17 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
     MODEL_SCOPE_CACHE_DIR=/path/to/cache \
     python -m train.train_stageA --config configs/synth_world.yaml --max_steps 50 --model_source auto
     ```
-    - 若已确认FAISS与CPU指令集兼容，可显式 `export KBLAMPP_FORCE_BRUTE_INDEX=0` 以重新启用ANN搜索。
+
 
 #### 位置编码/知识注入的当前限制与下一步
+
 - 目前仍为单注入层，未显式传递 `past_key_values`；若需更长上下文或多注入点，需扩展wrapper以切分Block并维护KV缓存。
 - `rel_id/ent_id` 仅用于记录；未来可基于 `meta/*.npy` 构建可训练嵌入并注入selector打分中。
 - 暴力检索适用于当前 `N≈10^5` 规模；若KB继续增长请在具备支持的机器上安装FAISS‑CPU/GPU，并移除强制回退。
 - 计划在README补充“常见错误（模型下载失败/Illegal Instruction）”指南，以及在Stage A完成第一次跑通后附带日志与指标样例以便复现。
-#### 代码改动内容
+
+#### 代码改动内容（ModelScope 通道）
+
 - `train/train_stageA.py`
    - 新增 `--model_source {auto,huggingface,modelscope}` 与 `--model_revision` 参数。默认模式下脚本优先通过ModelScope `snapshot_download` 拉取 `LLM-Research/Llama-3.2-1B-Instruct`，仅在ModelScope缺失或失败时才回退到HuggingFace。
    - 引入 `load_backbone_with_fallback` 辅助函数，统一处理缓存目录（`$MODEL_SCOPE_CACHE_DIR`或`~/.cache/modelscope/snapshots`）和日志提示，让离线训练流程可重复。
@@ -414,14 +417,60 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 - `requirements.txt`：加入 `modelscope>=1.10.0` 依赖，确保脚本可直接调用ModelScope SDK。
 - `README.md`：说明“auto”模式会优先走ModelScope，并介绍如何在离线编码脚本中使用相同的参数。
 
-#### 使用指引
+#### 使用指引（ModelScope）
+
 1. 安装依赖：`pip install modelscope`（可使用ModelScope官方或本地镜像源）。
 2. 默认 `--model_source auto` 会先尝试ModelScope，只有在镜像不可用时才回退到HuggingFace；若想强制某一端，可显式传 `--model_source modelscope` 或 `--model_source huggingface`：
-    ```bash
-    python -m train.train_stageA --config configs/synth_world.yaml --max_steps 50 --model_source auto
-    ```
+
+      ```bash
+      python -m train.train_stageA --config configs/synth_world.yaml --max_steps 50 --model_source auto
+      ```
+
 3. 如需自定义ModelScope缓存位置，设置 `MODEL_SCOPE_CACHE_DIR=/path/to/cache`。
 
-#### 后续可选事项
+#### 后续可选事项（ModelScope）
+
 - 将 `configs/backbone_llama1b.yaml` 扩展 `model_source` 字段，以便在多配置之间共享策略。
 - 若后续需要在离线环境下获取句向量模型，可为 `offline/encode_kv.py` 增加类似的ModelScope回退逻辑。（已完成本版本改造，可继续推广到其它脚本。）
+
+### V1.13 Stage A 长跑与日志体系升级
+
+- 2025-11-25 20:15
+
+#### 代码改动内容（核心文件）
+
+- `train/train_stageA.py`
+  - **告警治理**：默认屏蔽 `past_key_value` 的 `FutureWarning` 与 flash-attention 的 `UserWarning`，支持 `--show_warnings` 临时恢复；`configure_logging` 可将日志同时写入控制台与文件/JSONL。
+  - **可观测性增强**：新增 `--log_interval/--log_level/--log_file/--log_jsonl/--loss_ema_beta` 等开关，日志中输出累计更新步数、EMA平滑损失、学习率、吞吐量（tok/s、samples/s）、ETA 以及 GPU 显存；可选 JSONL 流便于后续可视化。
+  - **长跑支持**：训练循环改为无限迭代 `DataLoader`，自动记录 epoch 号并在完成一次 200 条 QA 后重新洗牌继续，`max_steps` 因此真正可跑到 4k/8k。空数据集会直接报错提示重新生成 QA。
+  - **资源感知**：在写入日志/JSONL 时自动建目录；若指定 `--log_file runs/...` 会持久化所有指标，便于分析回溯。
+- `README.md`
+  - “Train, evaluate, iterate” 小节补充了长跑与日志的使用示例：如何提升 `train.max_steps`、何时传入 `--hf_token`、如何启用 `--use_faiss` 与 `--log_jsonl`、以及 `--show_warnings` 的作用。
+
+#### 功能验证与运行记录
+
+1. **告警抑制 + 日志输出冒烟**
+   - 指令：`python -m train.train_stageA --config configs/synth_world.yaml --model_source modelscope --model_revision master --max_steps 2 --log_interval 1 --log_file runs\stageA_smoke.log --log_jsonl runs\stageA_smoke.jsonl`
+   - 结果：两步更新完成，无再现旧有的 `past_key_value`/flash attention 告警，日志同时写入 console 与 `runs/`。
+2. **多 epoch 循环验证**
+   - 指令：`python -m train.train_stageA --config configs/synth_world.yaml --model_source modelscope --model_revision master --max_steps 150 --log_interval 50 --log_file runs\stageA_cycle.log --log_jsonl runs\stageA_cycle.jsonl`
+   - 结果：日志显示 `dataset_size=200`，当 Update 100 结束后打印 `Epoch 1 completed ...` 并继续跑到 epoch 2，150 步完整执行；EMA 损失从 1.63e6 收敛到 1.38e5。
+3. **长跑受限诊断**
+   - 初次尝试 `--max_steps 4000` 仅跑到 100 步即停，原因是旧循环只迭代了一轮 dataloader。新版本已解决此行为；如需真正跑 4k 步，可直接重复上述命令并提高 `--max_steps`。
+
+#### 当前存在的问题
+
+1. **数据规模与质量**：默认 QA 仅 200 条，多次 epoch 后容易过拟合/振荡；仍需扩充 `data/qa/synth_world_llm_train.jsonl` 或接入 Hotpot/TimeQA。
+2. **离线编码仍是随机嵌入**：若未联网运行 `encode_kv.py`，K/V 仍为确定性噪声，导致损失值高（10^5～10^6）。需在可联网环境重新跑 `offline/run_pipeline.py --steps encode index` 以获得真实语义嵌入。
+3. **ModelScope 下载提示**：`modelscope` 仍会尝试创建 Windows 下的符号链接并报 `Failed to create symbolic link ...`，虽不影响运行但会持续出现；后续可考虑在缓存目录预创建硬链接或静默该 WARNING。
+4. **评测缺失**：Stage B、评估脚本依旧未接入，训练完毕后无法自动给出 EM/F1 或证据链指标。
+
+#### 下一步建议
+
+1. **扩充训练语料**：在 `configs/synth_world.yaml` 的 `pipeline.qa.train_questions` 提升到 ≥1k，并重新运行 `offline/run_pipeline.py --force`，或接入 Hotpot/TimeQA 以验证泛化能力。
+2. **真实嵌入刷新**：在可外网环境下安装 sentence-transformers/bge，重新执行 `--steps encode index`，然后同步 `store/synth_world_llm` 目录，降低 Stage A 初始损失。
+3. **训练监控自动化**：利用 `runs/*.jsonl` 构建可视化脚本（matplotlib 或 TensorBoard 导入），并增加早停/学习率调度以稳定长跑。
+4. **Stage B 与评估闭环**：实现 `train/train_stageB.py` 与 `eval/eval_qa.py`，将 Stage A 得到的知识注入参数迁移至完全解冻或 LoRA 训练，并输出指标对齐业务目标。
+5. **模型缓存/部署**：将 `LLM-Research/Llama-3.2-1B-Instruct` 的 ModelScope 缓存路径记录在 README/配置中，减少每次运行的下载噪音，并在内网封闭场景下提前同步权重。
+
+
