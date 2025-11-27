@@ -66,7 +66,7 @@ d_model: 2048   # 以模型 config 为准
 
 ### 1.2 Sentence Embedding 选型（小显卡友好）
 
-你给的备选：
+目前可用的备选：
 1. sentence-transformers/all-MiniLM-L6-v2
   - 维度：384
   - 优点：极快、资源占用小，非常适合 Plan B。
@@ -155,7 +155,7 @@ Plan B 和 Plan A 的唯一区别：configs 中的模型规模和训练超参不
 
 ## 3. 数据结构与维度（Plan B 不变）
 
-五元组 schema 沿用你已经定下的格式，这里只补一句：Plan B 完全复用，不再改 schema。
+五元组 schema 沿用已经定下的格式，这里只补一句：Plan B 完全复用，不再改 schema。
 
 **维度符号（与小模型无关，通用）：**
 
@@ -516,7 +516,7 @@ $$\widetilde{V}^{(j)} = \sum_i \alpha_{ij} V_i$$
 
 ## 9. 总结（给第三方工程实现团队看的"一句话 checklist"）
 
-如果你是一个对项目背景不熟的小模型工程师，只要按下面三个层次一步步往下做，就能在 1B–3B 模型上跑通 KBLaM++：
+只要按下面三个层次一步步往下做，就能在 1B–3B 模型上跑通 KBLaM++：
 
 1. **离线准备：**
   - 用 LLM 生成一个小型世界（entities + 5-tuple facts）；
