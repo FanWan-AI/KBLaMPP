@@ -402,20 +402,21 @@ save_interval: 1000
 ```
 
 **训练脚本大致流程（train/train_stageA.py）：**
+
 1. 加载 backbone + tokenizer
-2. 冻结 backbone 参数
+2. 冻结 backbone 参数  
 3. 初始化 KB 模块
 4. 加载 KnowledgeIndex 和 KBValueStore
 5. 循环读取 QA 样本，按以下流程前向：
-  - 编码问题 → hidden states 至注入层 L；
-  - 用 linear_q 得到 $Q$；
-  - 展平成 $(B*T, d_k)$，ANN 检索 → 候选索引 $I$；
-  - KBValueStore.fetch(I) → $K_{\text{kb}}, V_{\text{kb}}, ctx_vec, \tau_{\min}, \tau_{\max}, \dots$；
-  - KBSelector(Q, ...) → $\alpha, V_{\text{tilde}}$；
-  - linear_v(V_tilde) → $V_{\text{kb_tilde}}$；
-  - KBFusionLayer(h_L, V_kb_tilde) → 新的 $h_L'$；
-  - 继续后续 Transformer 层；
-  - 调 LM head 生成/分类答案，算 CE loss。
+   - 编码问题 → hidden states 至注入层 L；
+   - 用 linear_q 得到查询向量 Q；
+   - 展平成 (B×T, d_k) 维度，ANN 检索 → 候选索引 I；
+   - KBValueStore.fetch(I) → 知识库的 Key、Value、上下文向量、时间窗最小值、时间窗最大值等元数据；
+   - KBSelector(Q, ...) → 注意力权重 α 和加权后的知识向量 V_tilde；
+   - linear_v(V_tilde) → 投影到模型维度的知识向量 V_kb_tilde；
+   - KBFusionLayer(h_L, V_kb_tilde) → 新的隐藏状态 h_L'；
+   - 继续后续 Transformer 层；
+   - 调用 LM head 生成/分类答案，计算交叉熵损失 CE loss。
 6. optimizer.step() 只更新 KB 模块。
 
 ### 6.3 阶段 B：解冻顶层 / LoRA（可选）
@@ -510,8 +511,11 @@ eval/dump_evidence.py 输出类似：
 
 5. **任何对公式的改动一律禁止：**
   - 核心计算必须保持：
+
 $$s_{ij} = \text{sem}_{ij} + \gamma\phi_{ij} + \eta g^{\text{time}}_{ij}$$
+
 $$\alpha = \mathrm{softmax}(s)$$
+
 $$\widetilde{V}^{(j)} = \sum_i \alpha_{ij} V_i$$
 
 ## 9. 总结（给第三方工程实现团队看的"一句话 checklist"）
